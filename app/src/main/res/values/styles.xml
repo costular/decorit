@@ -6,4 +6,9 @@
         <item name="itemIconSize">26dp</item>
     </style>
 
+    <style name="RoundedImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
 </resources>

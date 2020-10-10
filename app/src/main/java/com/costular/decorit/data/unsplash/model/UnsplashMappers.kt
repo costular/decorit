@@ -1,4 +1,4 @@
-package com.costular.decorit.data.unsplash
+package com.costular.decorit.data.unsplash.model
 
 import com.costular.decorit.data.SourceConstants.UNSPLASH
 import com.costular.decorit.domain.model.Photo

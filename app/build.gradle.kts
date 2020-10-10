@@ -95,7 +95,13 @@ dependencies {
     implementation(Deps.moshi)
     implementation(Deps.moshiRetrofit)
     kapt(Deps.moshiCompiler)
+    implementation(Deps.lifecycleRuntime)
+    implementation(Deps.lifecycleLiveData)
+    implementation(Deps.lifecycleCommon)
+    debugImplementation(Deps.chuckerDebug)
+    releaseImplementation(Deps.chuckerRelease)
 
+    testImplementation(Deps.junit)
     testImplementation(Deps.uniflowTest)
     testImplementation(Deps.uniflowAndroidTest)
     testImplementation(Deps.coroutinesTest)

@@ -5,6 +5,7 @@
     <color name="teal_700">#00796B</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="placeholder">#80CBC4</color>
     <color name="system_ui_scrim_light">#B3FFFFFF</color> <!-- 70% white -->
     <color name="system_ui_scrim_dark">#30000000</color> <!-- 19% black -->
 

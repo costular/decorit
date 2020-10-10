@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navWallpapers"
+        android:id="@+id/navPhotos"
         android:icon="@drawable/ic_nav_selector_wallpaper"
         android:title="@string/nav_photos"/>
 

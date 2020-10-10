@@ -25,6 +25,7 @@ object Versions {
     val glide = "4.11.0"
     val retrofit = "2.9.0"
     val moshi = "1.9.3"
+    val chucker = "3.3.0"
 
     val preferences = "1.1.1"
     val preferencesDataStore = "1.0.0-alpha01"
@@ -66,6 +67,11 @@ object Deps {
     val moshiRetrofit = "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
     val moshi = "com.squareup.moshi:moshi-kotlin:${Versions.moshi}"
     val moshiCompiler = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
+    val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime:${Versions.lifecycle}"
+    val lifecycleCommon = "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
+    val lifecycleLiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+    val chuckerDebug = "com.github.chuckerteam.chucker:library:${Versions.chucker}"
+    val chuckerRelease = "com.github.chuckerteam.chucker:library-no-op:${Versions.chucker}"
 
     val junit = "junit:junit:4.13"
     val uniflowTest = "io.uniflow:uniflow-test:${Versions.uniflow}"
@@ -76,7 +82,6 @@ object Deps {
     val truth = "androidx.test.ext:truth:${Versions.truth}"
     val test = "androidx.arch.core:core-testing:${Versions.testJetpack}"
     val testRunner = "androidx.test:runner:${Versions.testRunner}"
-    val kluentAndroid = "org.amshove.kluent:kluent-android:${Versions.truth}"
     val espresso = "androidx.test.espresso:espresso-core:3.2.0"
     val kaspresso = "com.kaspersky.android-components:kaspresso:${Versions.kaspresso}"
     val navigationTest = "androidx.navigation:navigation-testing:${Versions.navigation}"
