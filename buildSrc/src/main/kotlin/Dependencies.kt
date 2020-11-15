@@ -3,13 +3,13 @@ object Versions {
     val coroutines = "1.3.3"
 
     val core = "1.5.0-alpha02"
-    val material = "1.2.0-alpha05"
+    val material = "1.3.0-alpha03"
     val appCompat = "1.1.0"
     val constraintLayout = "1.1.3"
     val lifecycle = "2.2.0"
     val fragment = "1.3.0-alpha04"
     val navigation = "2.3.0-alpha06"
-    val uniflow = "0.11.0"
+    val uniflow = "0.11.6"
     val threeTen = "1.2.4"
     val mockk = "1.10.0"
     val permissionsDispatcher = "4.7.0"
@@ -26,6 +26,8 @@ object Versions {
     val retrofit = "2.9.0"
     val moshi = "1.9.3"
     val chucker = "3.3.0"
+    val flick = "1.7.0"
+    val gestureViews = "2.6.0"
 
     val preferences = "1.1.1"
     val preferencesDataStore = "1.0.0-alpha01"
@@ -72,6 +74,8 @@ object Deps {
     val lifecycleLiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
     val chuckerDebug = "com.github.chuckerteam.chucker:library:${Versions.chucker}"
     val chuckerRelease = "com.github.chuckerteam.chucker:library-no-op:${Versions.chucker}"
+    val flick = "me.saket:flick:${Versions.flick}"
+    val gestureViews = "com.alexvasilkov:gesture-views:${Versions.gestureViews}"
 
     val junit = "junit:junit:4.13"
     val uniflowTest = "io.uniflow:uniflow-test:${Versions.uniflow}"

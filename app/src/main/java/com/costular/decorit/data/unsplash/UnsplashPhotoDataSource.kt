@@ -5,12 +5,10 @@ import com.costular.decorit.data.unsplash.model.toPhoto
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.SearchParams
 import com.costular.decorit.domain.model.areEmpty
-import com.costular.decorit.util.PhotoId
-import com.costular.decorit.util.SourceId
 
 class UnsplashPhotoDataSource(private val unsplashApi: UnsplashApi) : PhotoDataSource {
 
-    override fun getSourceId(): SourceId = SourceId("unsplash")
+    override fun getSourceId(): String = "unsplash"
 
     override suspend fun getPhotos(
         page: Int,
@@ -26,8 +24,8 @@ class UnsplashPhotoDataSource(private val unsplashApi: UnsplashApi) : PhotoDataS
         }
     }
 
-    override suspend fun getPhotoById(photoId: PhotoId): Photo =
-        unsplashApi.getPhotoById(photoId.id).toPhoto()
+    override suspend fun getPhotoById(photoId: String): Photo =
+        unsplashApi.getPhotoById(photoId).toPhoto()
 
     override suspend fun getFavorites(): List<Photo> {
         TODO("Not yet implemented")

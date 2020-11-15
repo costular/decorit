@@ -1,6 +1,5 @@
 package com.costular.decorit.domain.model
 
-import com.costular.decorit.util.PhotoColor
 
 data class SearchParams(
     val color: List<PhotoColor> = emptyList(),

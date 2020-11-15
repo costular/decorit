@@ -10,6 +10,18 @@
         android:id="@+id/navPhotos"
         android:name="com.costular.decorit.presentation.photos.PhotosFragment"
         android:label="PhotosFragment"
-        tools:layout="@layout/fragment_photos"/>
+        tools:layout="@layout/fragment_photos">
+        <action
+            android:id="@+id/action_navPhotos_to_photoDetailActivity"
+            app:destination="@id/photoDetailActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/photoDetailActivity"
+        android:name="com.costular.decorit.presentation.photodetail.PhotoDetailActivity"
+        android:label="PhotoDetailActivity" >
+        <argument
+            android:name="photo"
+            app:argType="com.costular.decorit.domain.model.Photo" />
+    </activity>
 
 </navigation>
