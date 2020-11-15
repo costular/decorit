@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#C4000000"
+    android:orientation="vertical">
+
+    <me.saket.flick.FlickDismissLayout
+        android:id="@+id/imageLayoutDismissable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.costular.decorit.presentation.photodetail.ZoomableGestureImageView
+            android:id="@+id/imageDetail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription" />
+
+        <com.google.android.material.progressindicator.ProgressIndicator
+            android:id="@+id/progressLoading"
+            style="@style/Widget.MaterialComponents.ProgressIndicator.Circular.Indeterminate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </me.saket.flick.FlickDismissLayout>
+
+</FrameLayout>

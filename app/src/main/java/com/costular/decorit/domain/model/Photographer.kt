@@ -1,9 +1,11 @@
 package com.costular.decorit.domain.model
 
-import com.costular.decorit.util.PhotographerId
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-data class Photographer(
-    val id: PhotographerId,
+@Parcelize
+class Photographer(
+    val id: String,
     val name: String,
     val avatar: String?
-)
+) : Parcelable
