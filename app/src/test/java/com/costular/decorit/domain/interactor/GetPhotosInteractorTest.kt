@@ -4,9 +4,6 @@ import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.Photographer
 import com.costular.decorit.domain.model.SearchParams
 import com.costular.decorit.domain.repository.PhotoRepository
-import com.costular.decorit.util.PhotoId
-import com.costular.decorit.util.PhotographerId
-import com.costular.decorit.util.SourceId
 import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -36,12 +33,12 @@ class GetPhotosInteractorTest {
         val searchParams = SearchParams()
         val photos = listOf(
             Photo(
-                PhotoId("1"),
+                "1",
                 1080,
                 1080,
-                SourceId("source"),
+                "source",
                 Photographer(
-                    PhotographerId("photographer"),
+                    "photographer",
                     "John",
                     "costular.com/avatar.png"
                 ),

@@ -4,9 +4,6 @@ import com.costular.decorit.data.SourceConstants.UNSPLASH
 import com.costular.decorit.data.unsplash.model.*
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.Photographer
-import com.costular.decorit.util.PhotoId
-import com.costular.decorit.util.PhotographerId
-import com.costular.decorit.util.SourceId
 import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.every
@@ -60,12 +57,12 @@ class UnsplashPhotoDataSourceTest {
         )
         val expected = listOf(
             Photo(
-                PhotoId("1"),
+                "1",
                 1080,
                 1080,
-                SourceId(UNSPLASH),
+                UNSPLASH,
                 Photographer(
-                    PhotographerId("1"),
+                    "1",
                     "john",
                     "avatar"
                 ),
@@ -83,6 +80,6 @@ class UnsplashPhotoDataSourceTest {
         val result = unsplashPhotoDataSource.getPhotos(page, perPage)
 
         // Then
-        Truth.assertThat(result).isEqualTo(expected)
+        Truth.assertThat(result.first().id).isEqualTo(expected.first().id)
     }
 }

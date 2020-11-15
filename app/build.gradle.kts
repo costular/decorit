@@ -100,6 +100,8 @@ dependencies {
     implementation(Deps.lifecycleCommon)
     debugImplementation(Deps.chuckerDebug)
     releaseImplementation(Deps.chuckerRelease)
+    implementation(Deps.flick)
+    implementation(Deps.gestureViews)
 
     testImplementation(Deps.junit)
     testImplementation(Deps.uniflowTest)

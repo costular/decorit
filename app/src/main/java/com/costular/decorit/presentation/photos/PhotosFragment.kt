@@ -4,16 +4,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.costular.decorit.R
 import com.costular.decorit.databinding.FragmentPhotosBinding
-import com.costular.decorit.presentation.common.PhotoEpoxy
+import com.costular.decorit.presentation.common.PhotoModel
+import com.costular.decorit.presentation.photodetail.PhotoDetailActivity
 import com.costular.decorit.util.extensions.viewBinding
+import com.costular.decorit.util.recycler.EndlessRecyclerViewScrollListener
 import com.costular.decorit.util.recycler.SpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import io.uniflow.android.flow.onStates
+import io.uniflow.android.flow.onTakeEvents
 
 @AndroidEntryPoint
 class PhotosFragment : Fragment(R.layout.fragment_photos) {
@@ -21,6 +25,8 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
     val viewModel: PhotosViewModel by viewModels()
 
     val binding by viewBinding(FragmentPhotosBinding::bind)
+
+    lateinit var paginationListener: EndlessRecyclerViewScrollListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,15 +37,23 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
 
     private fun init() {
         binding.epoxyPhotos.apply {
-            layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL).apply {
-                gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+            val layoutMan = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL).apply {
+                gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
             }
+            layoutManager = layoutMan
             itemAnimator = DefaultItemAnimator()
+            setHasFixedSize(true)
 
             val space = resources.getDimensionPixelSize(R.dimen.space_between_photos)
             addItemDecoration(SpaceItemDecoration(space))
-        }
 
+            paginationListener = object : EndlessRecyclerViewScrollListener(layoutMan) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                    viewModel.load()
+                }
+            }
+            addOnScrollListener(paginationListener)
+        }
     }
 
     private fun listen() {
@@ -49,7 +63,15 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
     }
 
     private fun listenEvents() {
-
+        onTakeEvents(viewModel) { event ->
+            when (event) {
+                is PhotosEvents.OpenPhoto -> {
+                    val directions =
+                        PhotosFragmentDirections.actionNavPhotosToPhotoDetailActivity(event.photo)
+                    findNavController().navigate(directions)
+                }
+            }
+        }
     }
 
     private fun listenState() {
@@ -63,10 +85,11 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
     private fun handleState(state: PhotosState) {
         binding.epoxyPhotos.withModels {
             state.photos.forEach { photo ->
+                spanCount = 2
 
-                PhotoEpoxy(photo.medium)
-                    .id(photo.id.id)
-                    .addTo(this)
+                PhotoModel(photo.medium) {
+                    viewModel.openPhoto(photo)
+                }.id(photo.id).addTo(this)
             }
         }
     }

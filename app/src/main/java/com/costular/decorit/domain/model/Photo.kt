@@ -1,17 +1,18 @@
 package com.costular.decorit.domain.model
 
-import com.costular.decorit.util.PhotoId
-import com.costular.decorit.util.SourceId
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Photo(
-    val id: PhotoId,
+    val id: String,
     val width: Int,
     val height: Int,
-    val sourceId: SourceId,
+    val sourceId: String,
     val photographer: Photographer,
     val isFavorite: Boolean,
     val original: String,
     val large: String,
     val medium: String,
     val small: String
-)
+) : Parcelable

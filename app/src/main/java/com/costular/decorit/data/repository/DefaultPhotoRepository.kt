@@ -4,7 +4,6 @@ import com.costular.decorit.data.unsplash.UnsplashPhotoDataSource
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.SearchParams
 import com.costular.decorit.domain.repository.PhotoRepository
-import com.costular.decorit.util.PhotoId
 
 class DefaultPhotoRepository(
     private val unsplashPhotoDataSource: UnsplashPhotoDataSource
@@ -20,7 +19,7 @@ class DefaultPhotoRepository(
         )
     }
 
-    override suspend fun getPhotoById(photoId: PhotoId): Photo {
+    override suspend fun getPhotoById(photoId: String): Photo {
         TODO("Not yet implemented")
     }
 
