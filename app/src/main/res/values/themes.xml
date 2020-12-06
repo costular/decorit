@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
 
-    <style name="Platform.Theme.Decorit" parent="Theme.MaterialComponents.DayNight.NoActionBar"></style>
+    <style name="Platform.Theme.Decorit" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 
     <style name="Base.Theme.Decorit" parent="Platform.Theme.Decorit">
         <item name="bottomNavigationStyle">@style/Widget.BottomNavigation</item>
