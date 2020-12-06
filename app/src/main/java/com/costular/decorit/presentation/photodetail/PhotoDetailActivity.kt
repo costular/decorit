@@ -11,6 +11,7 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.annotation.FloatRange
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
@@ -45,6 +46,7 @@ class PhotoDetailActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         super.onCreate(savedInstanceState)
+        delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
         overridePendingTransition(0, 0)
         setContentView(binding.root)
         listen()
@@ -60,7 +62,7 @@ class PhotoDetailActivity : AppCompatActivity() {
                 SystemUiHelper.LEVEL_IMMERSIVE,
                 0,
                 null
-            )
+            ).also { it.hide() }
         binding.imageDetail.setOnClickListener { systemUiHelper.toggle() }
     }
 
@@ -71,7 +73,7 @@ class PhotoDetailActivity : AppCompatActivity() {
     }
 
     private fun listenActions() {
-
+        binding.fabClose.setOnClickListener { animateExit { finish() } }
     }
 
     private fun listenEvents() {
@@ -92,6 +94,17 @@ class PhotoDetailActivity : AppCompatActivity() {
 
     private fun handleState(state: PhotoDetailState) {
         binding.progressLoading.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+
+        state.photo?.let { photo ->
+            binding.textAuthorName.text = photo.photographer.name
+            binding.textSource.text = photo.sourceId
+
+            Glide.with(binding.imageAuthorAvatar)
+                .load(photo.photographer.avatar)
+                .circleCrop()
+                .into(binding.imageAuthorAvatar)
+        }
+
     }
 
     override fun finish() {
@@ -151,7 +164,7 @@ class PhotoDetailActivity : AppCompatActivity() {
             maxOf(dip(240), binding.imageDetail.zoomedImageHeight.toInt())
         }
 
-        val gestureListener = FlickGestureListener(this, contentSizeProvider, callbacks)
+        val gestureListener = FlickGestureListener(this, contentSizeProvider, callbacks, false)
 
         // Block flick gestures if the image can pan further.
         gestureListener.gestureInterceptor = { scrollY ->
