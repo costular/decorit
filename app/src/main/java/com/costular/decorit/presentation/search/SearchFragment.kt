@@ -1,32 +1,33 @@
-package com.costular.decorit.presentation.photos
+package com.costular.decorit.presentation.search
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.costular.decorit.R
-import com.costular.decorit.databinding.FragmentPhotosBinding
+import com.costular.decorit.databinding.FragmentSearchBinding
 import com.costular.decorit.presentation.common.PhotoModel
-import com.costular.decorit.presentation.photodetail.PhotoDetailActivity
 import com.costular.decorit.util.extensions.viewBinding
 import com.costular.decorit.util.recycler.EndlessRecyclerViewScrollListener
-import com.costular.decorit.util.recycler.LoadingEpoxy
 import com.costular.decorit.util.recycler.LoadingEpoxy_
 import com.costular.decorit.util.recycler.SpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import io.uniflow.android.flow.onStates
 import io.uniflow.android.flow.onTakeEvents
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 
 @AndroidEntryPoint
-class PhotosFragment : Fragment(R.layout.fragment_photos) {
+class SearchFragment : Fragment(R.layout.fragment_search) {
 
-    val viewModel: PhotosViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModels()
 
-    val binding by viewBinding(FragmentPhotosBinding::bind)
+    private val binding by viewBinding(FragmentSearchBinding::bind)
 
     lateinit var paginationListener: EndlessRecyclerViewScrollListener
 
@@ -34,7 +35,6 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
         super.onViewCreated(view, savedInstanceState)
         init()
         listen()
-        viewModel.load()
     }
 
     private fun init() {
@@ -47,11 +47,13 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
             setHasFixedSize(true)
 
             val space = resources.getDimensionPixelSize(R.dimen.space_between_photos)
+            val topSpace = resources.getDimensionPixelSize(R.dimen.search_top_space)
             addItemDecoration(SpaceItemDecoration(space))
+            addItemDecoration(TopSpacingDecorator(topSpace))
 
             paginationListener = object : EndlessRecyclerViewScrollListener(layoutMan) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                    viewModel.load()
+                    viewModel.search(loadNext = true)
                 }
             }
             addOnScrollListener(paginationListener)
@@ -59,49 +61,56 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
     }
 
     private fun listen() {
-        listenActions()
         listenState()
         listenEvents()
+        listenActions()
+    }
+
+    private fun listenActions() {
+        binding.fabFilter.setOnClickListener { viewModel.openFilter() }
+
+        binding.materialSearchView.textChanges
+            .debounce(300L)
+            .catch { Timber.e(it) }
+            .onEach { query ->
+                viewModel.search(query)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun listenEvents() {
         onTakeEvents(viewModel) { event ->
             when (event) {
-                is PhotosEvents.OpenPhoto -> {
-                    val directions =
-                        PhotosFragmentDirections.actionNavPhotosToPhotoDetailActivity(event.photo)
-                    findNavController().navigate(directions)
-                }
+                is SearchEvents.OpenFilters -> openFilters()
             }
         }
+    }
+
+    private fun openFilters() {
+        val directions = SearchFragmentDirections.actionNavSearchToFilterFragment()
+        findNavController().navigate(directions)
     }
 
     private fun listenState() {
         onStates(viewModel) { state ->
-            when (state) {
-                is PhotosState -> handleState(state)
-            }
+            if (state is SearchState) handleState(state)
         }
     }
 
-    private fun handleState(state: PhotosState) {
+    private fun handleState(state: SearchState) {
         binding.epoxyPhotos.withModels {
             spanCount = 2
 
-            state.photos.forEach { photo ->
+            state.items.forEach { photo ->
                 PhotoModel(photo.medium) {
-                    viewModel.openPhoto(photo)
+                    // viewModel.openPhoto(photo)
                 }.id(photo.id).addTo(this)
             }
 
             LoadingEpoxy_()
-                .spanSizeOverride { totalSpanCount, position, itemCount -> 2 }
                 .id("loading")
-                .addIf(state.loadingMore, this)
+                .addIf(state.isLoading, this)
         }
-    }
-
-    private fun listenActions() {
     }
 
 }

@@ -15,7 +15,7 @@ class DefaultPhotoRepository(
         searchParams: SearchParams
     ): List<Photo> {
         return mergeResults(
-            unsplashPhotoDataSource.getPhotos(page, perPage)
+            unsplashPhotoDataSource.getPhotos(page, perPage, searchParams)
         )
     }
 

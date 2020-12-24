@@ -9,7 +9,9 @@
 
     <style name="Theme.Decorit" parent="Base.Theme.Decorit">
         <item name="colorPrimary">@color/teal_500</item>
-        <item name="colorOnPrimary">#000000</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <item name="colorDivider">@color/lightDivider</item>
     </style>
 
     <style name="Theme.Decorit.Immerse" parent="Theme.Decorit">

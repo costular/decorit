@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id(GradlePlugins.android)
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
+    id(GradlePlugins.kotlinParcelize)
     id(GradlePlugins.hilt)
     id(GradlePlugins.safeArgs)
 }
@@ -102,6 +102,8 @@ dependencies {
     releaseImplementation(Deps.chuckerRelease)
     implementation(Deps.flick)
     implementation(Deps.gestureViews)
+    implementation(Deps.flowBindingAndroid)
+    implementation(Deps.snapHelper)
 
     testImplementation(Deps.junit)
     testImplementation(Deps.uniflowTest)

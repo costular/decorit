@@ -44,7 +44,9 @@
             app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/floatingActionButton"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars"
+            android:background="@drawable/bg_image_border"
+            android:padding="1dp" />
 
         <TextView
             android:id="@+id/textAuthorName"

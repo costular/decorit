@@ -18,10 +18,27 @@
     <activity
         android:id="@+id/photoDetailActivity"
         android:name="com.costular.decorit.presentation.photodetail.PhotoDetailActivity"
-        android:label="PhotoDetailActivity" >
+        android:label="PhotoDetailActivity">
         <argument
             android:name="photo"
             app:argType="com.costular.decorit.domain.model.Photo" />
     </activity>
+
+    <fragment
+        android:id="@+id/navSearch"
+        android:name="com.costular.decorit.presentation.search.SearchFragment"
+        android:label="@string/nav_search"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_navSearch_to_filterFragment"
+            app:destination="@id/filterFragment" />
+        <action
+            android:id="@+id/action_navSearch_to_photoDetailActivity"
+            app:destination="@id/photoDetailActivity" />
+    </fragment>
+    <dialog
+        android:id="@+id/filterFragment"
+        android:name="com.costular.decorit.presentation.search.filter.FilterFragment"
+        android:label="FilterFragment" />
 
 </navigation>

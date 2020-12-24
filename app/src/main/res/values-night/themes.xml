@@ -3,6 +3,8 @@
     <style name="Theme.Decorit" parent="Base.Theme.Decorit">
         <item name="colorPrimary">@color/teal_200</item>
         <item name="colorOnPrimary">#000000</item>
+
+        <item name="colorDivider">@color/darkDivider</item>
     </style>
 
 </resources>

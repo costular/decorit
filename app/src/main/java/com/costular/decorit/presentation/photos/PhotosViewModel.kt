@@ -7,10 +7,8 @@ import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.SearchParams
 import com.costular.decorit.presentation.base.ReduxViewModel
 import io.uniflow.core.flow.actionOn
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 
 class PhotosViewModel @ViewModelInject constructor(
     private val dispatcher: DispatcherProvider,
@@ -25,7 +23,7 @@ class PhotosViewModel @ViewModelInject constructor(
                 SearchParams()
             )
         )
-            .flowOn(dispatcher.io)
+            .catch { Timber.e(it) }
             .onStart { setState(state.copy(loadingMore = true)) }
             .collect {
                 setState(
