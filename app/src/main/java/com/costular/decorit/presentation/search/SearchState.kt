@@ -9,5 +9,6 @@ data class SearchState(
     val page: Int = 1,
     val isLoading: Boolean = false,
     val params: SearchParams = SearchParams(),
-    val filterColors: List<ColorFilterItem> = emptyList()
+    val filterColors: List<ColorFilterItem> = emptyList(),
+    val showFilters: Boolean = false
 ) : UIState()

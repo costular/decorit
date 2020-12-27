@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="colorFilterYellow" format="reference" />
+    <attr name="colorFilterOrange" format="reference" />
+    <attr name="colorFilterRed" format="reference" />
+    <attr name="colorFilterPurple" format="reference" />
+    <attr name="colorFilterMagenta" format="reference" />
+    <attr name="colorFilterGreen" format="reference" />
+    <attr name="colorFilterTeal" format="reference" />
+    <attr name="colorFilterBlue" format="reference" />
+
     <declare-styleable name="DecoritSearchView">
         <attr name="colorDivider" format="reference|color" />
 

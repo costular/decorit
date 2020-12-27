@@ -1,6 +1,7 @@
 package com.costular.decorit.domain.repository
 
 import com.costular.decorit.domain.model.Photo
+import com.costular.decorit.domain.model.PhotoColor
 import com.costular.decorit.domain.model.SearchParams
 
 interface PhotoRepository {

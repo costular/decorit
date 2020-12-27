@@ -11,6 +11,7 @@ import android.widget.Checkable
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.withTranslation
 import com.costular.decorit.R
+import com.costular.decorit.util.extensions.isColorDark
 import kotlin.math.min
 
 /**
@@ -210,7 +211,10 @@ class ColorView @JvmOverloads constructor(
 
         // Draw
         if (isChecked()) {
+            val color = if (circleColor.isColorDark()) Color.WHITE else Color.BLACK
+
             drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+            drawable.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
             canvas.withTranslation(
                 x = ((width / 2) - (drawable.intrinsicWidth / 2)).toFloat(),
                 ((height / 2) - (drawable.intrinsicHeight / 2)).toFloat()

@@ -12,4 +12,19 @@
     <color name="lightDivider">#1F000000</color>
     <color name="darkDivider">#1FFFFFFF</color>
 
+    <color name="red_500">#f44336</color>
+    <color name="red_200">#ef9a9a</color>
+    <color name="blue_500">#2196f3</color>
+    <color name="blue_200">#90caf9</color>
+    <color name="yellow_500">#ffeb3b</color>
+    <color name="yellow_200">#fff59d</color>
+    <color name="orange_500">#ff9800</color>
+    <color name="orange_200">#ffcc80</color>
+    <color name="purple_500">#673ab7</color>
+    <color name="purple_200">#b39ddb</color>
+    <color name="magenta_500">#9c27b0</color>
+    <color name="magenta_200">#ce93d8</color>
+    <color name="green_500">#4caf50</color>
+    <color name="green_200">#a5d6a7</color>
+
 </resources>

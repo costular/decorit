@@ -3,6 +3,7 @@ package com.costular.decorit.presentation.search
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -11,7 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.costular.decorit.R
 import com.costular.decorit.databinding.FragmentSearchBinding
+import com.costular.decorit.domain.model.Photo
+import com.costular.decorit.domain.model.SearchParams
 import com.costular.decorit.presentation.common.PhotoModel
+import com.costular.decorit.presentation.photos.PhotosFragmentDirections
+import com.costular.decorit.util.extensions.getAttrColor
 import com.costular.decorit.util.extensions.viewBinding
 import com.costular.decorit.util.recycler.EndlessRecyclerViewScrollListener
 import com.costular.decorit.util.recycler.LoadingEpoxy_
@@ -25,7 +30,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by activityViewModels()
 
     private val binding by viewBinding(FragmentSearchBinding::bind)
 
@@ -82,8 +87,15 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         onTakeEvents(viewModel) { event ->
             when (event) {
                 is SearchEvents.OpenFilters -> openFilters()
+                is SearchEvents.OpenPhoto -> openPhoto(event.photo)
             }
         }
+    }
+
+    private fun openPhoto(photo: Photo) {
+        val directions =
+            SearchFragmentDirections.actionNavSearchToPhotoDetailActivity2(photo)
+        findNavController().navigate(directions)
     }
 
     private fun openFilters() {
@@ -98,12 +110,14 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun handleState(state: SearchState) {
+        binding.fabFilter.visibility = if (state.showFilters) View.VISIBLE else View.GONE
+
         binding.epoxyPhotos.withModels {
             spanCount = 2
 
             state.items.forEach { photo ->
                 PhotoModel(photo.medium) {
-                    // viewModel.openPhoto(photo)
+                    viewModel.openPhoto(photo)
                 }.id(photo.id).addTo(this)
             }
 

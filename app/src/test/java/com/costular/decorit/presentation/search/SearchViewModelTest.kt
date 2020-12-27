@@ -1,7 +1,6 @@
 package com.costular.decorit.presentation.search
 
 import android.graphics.Color
-import android.widget.SearchView
 import com.costular.decorit.data.SourceConstants
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
 import com.costular.decorit.domain.model.*
@@ -236,8 +235,87 @@ class SearchViewModelTest : ReduxViewModelTest() {
         // Then
         val lastState = view.lastStateOrNull as SearchState
         Truth.assertThat(lastState.params.color).isEqualTo(color)
-        Truth.assertThat(lastState.filterColors.find { it.color.value == color.value }?.isSelected)
+        Truth.assertThat(lastState.filterColors.find { it.color == color.value }?.isSelected)
             .isTrue()
+    }
+
+    @Test
+    fun `Test show filters when params are empty`() = testBlocking {
+        // Given
+
+
+        // When
+
+
+        // Then
+        val lastState = view.lastStateOrNull as SearchState
+        Truth.assertThat(lastState.showFilters).isFalse()
+    }
+
+    @Test
+    fun `Test show filters when params are non-empty`() = testBlocking {
+        // Given
+        val photos = listOf(
+            Photo(
+                "1",
+                1080,
+                1080,
+                SourceConstants.UNSPLASH,
+                Photographer(
+                    "1",
+                    "john",
+                    "avatar"
+                ),
+                false,
+                "original",
+                "full",
+                "regular",
+                "small"
+            )
+        )
+        every { getPhotosInteractor(any()) } returns flowOf(photos)
+
+        // When
+        viewModel.search(query = "whatever")
+
+        // Then
+        val lastState = view.lastStateOrNull as SearchState
+        Truth.assertThat(lastState.showFilters).isTrue()
+    }
+
+    @Test
+    fun `Test clear query should reset filters`() = testBlocking {
+        // Given
+        val photos = listOf(
+            Photo(
+                "1",
+                1080,
+                1080,
+                SourceConstants.UNSPLASH,
+                Photographer(
+                    "1",
+                    "john",
+                    "avatar"
+                ),
+                false,
+                "original",
+                "full",
+                "regular",
+                "small"
+            )
+        )
+
+        every { getPhotosInteractor(any()) } returns flowOf(photos)
+
+        // When
+        viewModel.search(query = "whatever")
+        viewModel.selectOrientation(PhotoOrientation.VERTICAL)
+        viewModel.search(query = "")
+
+        // Then
+        val lastState = view.lastStateOrNull as SearchState
+        Truth.assertThat(lastState.params.areEmpty()).isTrue()
+        Truth.assertThat(lastState.showFilters).isFalse()
     }
 
 }

@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_navSearch_to_photoDetailActivity"
             app:destination="@id/photoDetailActivity" />
+        <action
+            android:id="@+id/action_navSearch_to_photoDetailActivity2"
+            app:destination="@id/photoDetailActivity" />
     </fragment>
     <dialog
         android:id="@+id/filterFragment"
