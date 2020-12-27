@@ -25,7 +25,6 @@ import com.costular.decorit.util.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.uniflow.android.flow.onStates
 import io.uniflow.android.flow.onTakeEvents
-import kotlinx.android.synthetic.main.activity_photo_detail.*
 import me.saket.flick.ContentSizeProvider2
 import me.saket.flick.FlickCallbacks
 import me.saket.flick.FlickGestureListener
@@ -123,10 +122,10 @@ class PhotoDetailActivity : AppCompatActivity() {
     }
 
     private fun loadPhoto(url: String) {
-        Glide.with(imageDetail)
+        Glide.with(binding.imageDetail)
             .load(url)
             .thumbnail(0.1f)
-            .listener(object: RequestListener<Drawable> {
+            .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
@@ -149,7 +148,7 @@ class PhotoDetailActivity : AppCompatActivity() {
                 }
 
             })
-            .into(imageDetail)
+            .into(binding.imageDetail)
     }
 
     private fun flickGestureListener(): FlickGestureListener {

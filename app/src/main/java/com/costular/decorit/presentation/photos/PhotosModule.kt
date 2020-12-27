@@ -1,6 +1,5 @@
 package com.costular.decorit.presentation.photos
 
-import android.app.Application
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
 import com.costular.decorit.domain.repository.PhotoRepository
 import dagger.Module

@@ -14,6 +14,8 @@ import com.costular.decorit.presentation.common.PhotoModel
 import com.costular.decorit.presentation.photodetail.PhotoDetailActivity
 import com.costular.decorit.util.extensions.viewBinding
 import com.costular.decorit.util.recycler.EndlessRecyclerViewScrollListener
+import com.costular.decorit.util.recycler.LoadingEpoxy
+import com.costular.decorit.util.recycler.LoadingEpoxy_
 import com.costular.decorit.util.recycler.SpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import io.uniflow.android.flow.onStates
@@ -41,7 +43,7 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
                 gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
             }
             layoutManager = layoutMan
-            itemAnimator = DefaultItemAnimator()
+            itemAnimator = null
             setHasFixedSize(true)
 
             val space = resources.getDimensionPixelSize(R.dimen.space_between_photos)
@@ -84,18 +86,22 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
 
     private fun handleState(state: PhotosState) {
         binding.epoxyPhotos.withModels {
-            state.photos.forEach { photo ->
-                spanCount = 2
+            spanCount = 2
 
+            state.photos.forEach { photo ->
                 PhotoModel(photo.medium) {
                     viewModel.openPhoto(photo)
                 }.id(photo.id).addTo(this)
             }
+
+            LoadingEpoxy_()
+                .spanSizeOverride { totalSpanCount, position, itemCount -> 2 }
+                .id("loading")
+                .addIf(state.loadingMore, this)
         }
     }
 
     private fun listenActions() {
     }
-
 
 }

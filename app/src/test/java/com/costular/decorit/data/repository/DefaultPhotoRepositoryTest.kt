@@ -2,7 +2,6 @@ package com.costular.decorit.data.repository
 
 import com.costular.decorit.data.unsplash.UnsplashPhotoDataSource
 import com.costular.decorit.domain.repository.PhotoRepository
-import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

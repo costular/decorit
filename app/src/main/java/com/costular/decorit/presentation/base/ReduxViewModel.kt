@@ -5,6 +5,6 @@ import io.uniflow.android.flow.AndroidDataFlow
 import io.uniflow.core.flow.data.UIState
 
 abstract class ReduxViewModel(
-    private val dispatcher: DispatcherProvider,
+    dispatcher: DispatcherProvider,
     initialState: UIState = UIState.Empty
-) : AndroidDataFlow(initialState, defaultDispatcher = dispatcher.computation)
+) : AndroidDataFlow(initialState, defaultDispatcher = dispatcher.io)

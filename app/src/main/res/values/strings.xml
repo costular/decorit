@@ -6,5 +6,13 @@
     <string name="nav_favorites">Favorites</string>
     <string name="nav_settings">Settings</string>
 
+    <!-- Search -->
+    <string name="search_hint">Search photos…</string>
+    <string name="search_filter_button">Filter</string>
 
+    <!-- Filter -->
+    <string name="search_filter_orientation_header">Orientation</string>
+    <string name="search_filter_orientation_any">Any</string>
+    <string name="search_filter_show_results_button">Show results</string>
+    <string name="search_filter_color_header">Color</string>
 </resources>

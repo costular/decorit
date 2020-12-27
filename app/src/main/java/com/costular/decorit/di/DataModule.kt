@@ -1,5 +1,6 @@
 package com.costular.decorit.di
 
+import android.content.Context
 import com.costular.decorit.data.repository.DefaultPhotoRepository
 import com.costular.decorit.data.unsplash.UnsplashApi
 import com.costular.decorit.data.unsplash.UnsplashPhotoDataSource
@@ -8,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import retrofit2.create
 import javax.inject.Singleton
