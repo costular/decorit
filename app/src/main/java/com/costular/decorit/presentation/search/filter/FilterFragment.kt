@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.airbnb.epoxy.CarouselModel_
+import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.costular.decorit.R
 import com.costular.decorit.databinding.FragmentFilterBinding
 import com.costular.decorit.domain.model.ColorValue
@@ -25,9 +28,9 @@ import io.uniflow.android.flow.onStates
 import io.uniflow.android.flow.onTakeEvents
 
 @AndroidEntryPoint
-class FilterFragment : BottomSheetDialogFragment() {
+class FilterFragment : BottomSheetDialogFragment(), MavericksView {
 
-    private val viewModel: SearchViewModel by activityViewModels()
+    private val viewModel: SearchViewModel by fragmentViewModel()
 
     private lateinit var binding: FragmentFilterBinding
 
@@ -54,7 +57,6 @@ class FilterFragment : BottomSheetDialogFragment() {
     }
 
     private fun listen() {
-        listenState()
         listenEvents()
         listenActions()
     }
@@ -67,12 +69,6 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     private fun listenEvents() {
 
-    }
-
-    private fun listenState() {
-        onStates(viewModel) { state ->
-            if (state is SearchState) handleState(state)
-        }
     }
 
     private fun handleState(state: SearchState) {
@@ -144,6 +140,10 @@ class FilterFragment : BottomSheetDialogFragment() {
             requireContext().getAttrColor(R.attr.colorFilterYellow),
             ColorValue.YELLOW
         )
+    }
+
+    override fun invalidate() {
+        withState(viewModel) { state -> handleState(state) }
     }
 
 }

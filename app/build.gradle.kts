@@ -21,7 +21,11 @@ android {
         versionName = Config.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders["appAuthRedirectScheme"] = "app.polarmail"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["dagger.hilt.disableModulesHaveInstallInCheck"] = "true"
+            }
+        }
     }
 
     signingConfigs {
@@ -37,30 +41,53 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
-            buildConfigField("String", "UNSPLASH_ACCESS_KEY", "\"${gradleLocalProperties(rootDir).getProperty("UNSPLASH_ACCESS_KEY")}\"")
+            buildConfigField(
+                "String",
+                "UNSPLASH_ACCESS_KEY",
+                "\"${gradleLocalProperties(rootDir).getProperty("UNSPLASH_ACCESS_KEY")}\""
+            )
         }
         getByName("debug") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            buildConfigField("String", "UNSPLASH_ACCESS_KEY", "\"${gradleLocalProperties(rootDir).getProperty("UNSPLASH_ACCESS_KEY")}\"")
+            buildConfigField(
+                "String",
+                "UNSPLASH_ACCESS_KEY",
+                "\"${gradleLocalProperties(rootDir).getProperty("UNSPLASH_ACCESS_KEY")}\""
+            )
         }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     buildFeatures {
         viewBinding = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose
+    }
+
+    packagingOptions {
+        // Multiple dependency bring these files in. Exclude them to enable
+        // our test APK to build (has no effect on our AARs)
+        excludes += "/META-INF/AL2.0"
+        excludes += "/META-INF/LGPL2.1"
+    }
 }
 
 kapt {
     correctErrorTypes = true
+    /*arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("room.incremental", "true")
+    }*/
 }
 
 dependencies {
@@ -72,18 +99,14 @@ dependencies {
     implementation(Deps.appCompat)
     implementation(Deps.viewModel)
     implementation(Deps.uniflow)
+    implementation(Deps.mvrx)
+    implementation(Deps.mvrxCompose)
     implementation(Deps.coroutines)
     implementation(Deps.kotlin)
-    implementation(Deps.epoxy)
-    kapt(Deps.epoxyCompiler)
-    implementation(Deps.threeTen)
     implementation(Deps.timber)
     kapt(Deps.hiltCompiler)
     implementation(Deps.hiltViewModel)
     kapt(Deps.hiltJetpackCompiler)
-    implementation(Deps.roomRuntinme)
-    implementation(Deps.roomKtx)
-    kapt(Deps.roomCompiler)
     implementation(Deps.glide)
     kapt(Deps.glideCompiler)
     implementation(Deps.navigationFragment)
@@ -103,7 +126,11 @@ dependencies {
     implementation(Deps.flick)
     implementation(Deps.gestureViews)
     implementation(Deps.flowBindingAndroid)
-    implementation(Deps.snapHelper)
+    implementation(Deps.composeActivity)
+    implementation(Deps.composeMaterial)
+    implementation(Deps.composeMaterialIcons)
+    implementation(Deps.composeUi)
+    implementation(Deps.composeUiTooling)
 
     testImplementation(Deps.junit)
     testImplementation(Deps.uniflowTest)

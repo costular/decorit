@@ -1,30 +1,30 @@
 package com.costular.decorit.presentation.photos
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.costular.decorit.R
 import com.costular.decorit.databinding.FragmentPhotosBinding
 import com.costular.decorit.presentation.common.PhotoModel
-import com.costular.decorit.presentation.photodetail.PhotoDetailActivity
 import com.costular.decorit.util.extensions.viewBinding
 import com.costular.decorit.util.recycler.EndlessRecyclerViewScrollListener
-import com.costular.decorit.util.recycler.LoadingEpoxy
 import com.costular.decorit.util.recycler.LoadingEpoxy_
 import com.costular.decorit.util.recycler.SpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import io.uniflow.android.flow.onStates
-import io.uniflow.android.flow.onTakeEvents
 
 @AndroidEntryPoint
-class PhotosFragment : Fragment(R.layout.fragment_photos) {
+class PhotosFragment : Fragment(R.layout.fragment_photos), MavericksView {
 
-    val viewModel: PhotosViewModel by viewModels()
+    val viewModel: PhotosViewModel by fragmentViewModel()
 
     val binding by viewBinding(FragmentPhotosBinding::bind)
 
@@ -60,26 +60,19 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
 
     private fun listen() {
         listenActions()
-        listenState()
         listenEvents()
     }
 
     private fun listenEvents() {
-        onTakeEvents(viewModel) { event ->
-            when (event) {
-                is PhotosEvents.OpenPhoto -> {
-                    val directions =
-                        PhotosFragmentDirections.actionNavPhotosToPhotoDetailActivity(event.photo)
-                    findNavController().navigate(directions)
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiEvents.asLiveData().observe(viewLifecycleOwner) { event ->
+                when (event) {
+                    is PhotosEvents.OpenPhoto -> {
+                        val directions =
+                            PhotosFragmentDirections.actionNavPhotosToPhotoDetailActivity(event.photo)
+                        findNavController().navigate(directions)
+                    }
                 }
-            }
-        }
-    }
-
-    private fun listenState() {
-        onStates(viewModel) { state ->
-            when (state) {
-                is PhotosState -> handleState(state)
             }
         }
     }
@@ -95,13 +88,16 @@ class PhotosFragment : Fragment(R.layout.fragment_photos) {
             }
 
             LoadingEpoxy_()
-                .spanSizeOverride { totalSpanCount, position, itemCount -> 2 }
                 .id("loading")
                 .addIf(state.loadingMore, this)
         }
     }
 
     private fun listenActions() {
+    }
+
+    override fun invalidate() {
+        withState(viewModel) { state -> handleState(state) }
     }
 
 }

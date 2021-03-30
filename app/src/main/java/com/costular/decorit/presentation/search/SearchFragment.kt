@@ -5,11 +5,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.costular.decorit.R
 import com.costular.decorit.databinding.FragmentSearchBinding
 import com.costular.decorit.domain.model.Photo
@@ -28,9 +32,9 @@ import kotlinx.coroutines.flow.*
 import timber.log.Timber
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(R.layout.fragment_search) {
+class SearchFragment : Fragment(R.layout.fragment_search), MavericksView {
 
-    private val viewModel: SearchViewModel by activityViewModels()
+    private val viewModel: SearchViewModel by fragmentViewModel()
 
     private val binding by viewBinding(FragmentSearchBinding::bind)
 
@@ -66,7 +70,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun listen() {
-        listenState()
         listenEvents()
         listenActions()
     }
@@ -84,10 +87,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun listenEvents() {
-        onTakeEvents(viewModel) { event ->
-            when (event) {
-                is SearchEvents.OpenFilters -> openFilters()
-                is SearchEvents.OpenPhoto -> openPhoto(event.photo)
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiEvents.asLiveData().observe(viewLifecycleOwner) { event ->
+                when (event) {
+                    is SearchEvents.OpenFilters -> openFilters()
+                    is SearchEvents.OpenPhoto -> openPhoto(event.photo)
+                }
             }
         }
     }
@@ -101,12 +106,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private fun openFilters() {
         val directions = SearchFragmentDirections.actionNavSearchToFilterFragment()
         findNavController().navigate(directions)
-    }
-
-    private fun listenState() {
-        onStates(viewModel) { state ->
-            if (state is SearchState) handleState(state)
-        }
     }
 
     private fun handleState(state: SearchState) {
@@ -125,6 +124,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 .id("loading")
                 .addIf(state.isLoading, this)
         }
+    }
+
+    override fun invalidate() {
+        withState(viewModel) { state -> handleState(state) }
     }
 
 }

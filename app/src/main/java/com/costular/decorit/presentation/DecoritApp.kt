@@ -1,6 +1,7 @@
 package com.costular.decorit.presentation
 
 import android.app.Application
+import com.airbnb.mvrx.Mavericks
 import com.costular.decorit.BuildConfig
 import com.costular.decorit.util.initializers.AppInitializer
 import com.costular.decorit.util.initializers.AppInitializers
@@ -21,6 +22,7 @@ class DecoritApp : Application() {
 
     private fun init() {
         initializers.init(this)
+        Mavericks.initialize(this)
 
         // Debug logger
         if (BuildConfig.DEBUG) {

@@ -1,26 +1,30 @@
 package com.costular.decorit.presentation.search
 
-import androidx.hilt.lifecycle.ViewModelInject
 import com.costular.decorit.core.net.DispatcherProvider
+import com.costular.decorit.di.AssistedViewModelFactory
+import com.costular.decorit.di.DaggerMvRxViewModelFactory
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
 import com.costular.decorit.domain.model.*
-import com.costular.decorit.presentation.base.ReduxViewModel
-import io.uniflow.core.flow.actionOn
+import com.costular.decorit.presentation.base.MviViewModel
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.plus
 import timber.log.Timber
 
-class SearchViewModel @ViewModelInject constructor(
-    dispatcher: DispatcherProvider,
+class SearchViewModel @AssistedInject constructor(
+    @Assisted state: SearchState,
+    private val dispatcher: DispatcherProvider,
     private val getPhotosInteractor: GetPhotosInteractor
-) : ReduxViewModel(dispatcher, SearchState()) {
+) : MviViewModel<SearchState>(state) {
+
+    private val PER_PAGE = 20
 
     init {
-        action {
-            setState(SearchState(filterColors = calculateColors(null)))
-        }
+        setState { copy(filterColors = calculateColors(state.params.color)) }
     }
 
-    fun search(query: String = "", loadNext: Boolean = false) = actionOn<SearchState> { state ->
+    fun search(query: String = "", loadNext: Boolean = false) = withState { state ->
         val params = if (!loadNext) {
             if (query.isNotEmpty()) {
                 state.params.copy(query = query)
@@ -33,43 +37,43 @@ class SearchViewModel @ViewModelInject constructor(
         val page = if (!loadNext) 1 else state.page + 1
 
         getPhotosInteractor(GetPhotosInteractor.Params(page, PER_PAGE, params))
-            .onStart { setState(state.copy(isLoading = true)) }
+            .onStart { setState { copy(isLoading = true) } }
             .catch { Timber.e(it) }
-            .collect { photos ->
-                val items = if (!loadNext) photos else state.items + photos
+            .onEach { photos ->
+                setState {
+                    val items = if (!loadNext) photos else items + photos
 
-                setState(
-                    state.copy(
+                    copy(
                         items = items,
                         page = page,
                         isLoading = false,
                         params = params,
                         showFilters = params.areEmpty().not()
                     )
-                )
-            }
+                }
+            }.launchIn(viewModelScope + dispatcher.io)
     }
 
-    fun openFilter() = action {
+    fun openFilter() {
         sendEvent(SearchEvents.OpenFilters)
     }
 
-    fun openPhoto(photo: Photo) = action {
+    fun openPhoto(photo: Photo) {
         sendEvent(SearchEvents.OpenPhoto(photo))
     }
 
-    fun selectOrientation(orientation: PhotoOrientation) = actionOn<SearchState> { state ->
-        setState(state.copy(params = state.params.copy(orientation = orientation)))
+    fun selectOrientation(orientation: PhotoOrientation) = withState { state ->
+        setState { copy(params = params.copy(orientation = orientation)) }
         search(state.params.query)
     }
 
-    fun selectColor(color: PhotoColor) = actionOn<SearchState> { state ->
-        setState(
-            state.copy(
-                params = state.params.copy(color = color),
+    fun selectColor(color: PhotoColor) = withState { state ->
+        setState {
+            copy(
+                params = params.copy(color = color),
                 filterColors = calculateColors(color)
             )
-        )
+        }
         search(state.params.query)
     }
 
@@ -82,8 +86,13 @@ class SearchViewModel @ViewModelInject constructor(
                 )
             }
 
-    companion object {
-        private const val PER_PAGE = 20
+    @AssistedInject.Factory
+    interface Factory : AssistedViewModelFactory<SearchViewModel, SearchState> {
+        override fun create(state: SearchState): SearchViewModel
     }
+
+    companion object :
+        DaggerMvRxViewModelFactory<SearchViewModel, SearchState>(SearchViewModel::class.java)
+
 
 }
