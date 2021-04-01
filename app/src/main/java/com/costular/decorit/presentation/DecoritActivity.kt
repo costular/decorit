@@ -6,6 +6,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -14,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.*
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Device
 import androidx.compose.ui.tooling.preview.Devices
@@ -51,19 +54,21 @@ class DecoritActivity : AppCompatActivity() {
             bottomBar = {
                 BottomNavigation(navController = navController, routes = routes)
             }
-        ) {
-            NavHost(navController, startDestination = Screen.Photos.route) {
-                composable(Screen.Photos.route) {
-                    PhotosScreen()
-                }
-                composable(Screen.Search.route) {
-                    SearchScreen()
-                }
-                composable(Screen.Favorites.route) {
-                    SearchScreen()
-                }
-                composable(Screen.Settings.route) {
-                    SearchScreen()
+        ) { innerPading ->
+            Box(modifier = Modifier.padding(innerPading)) {
+                NavHost(navController, startDestination = Screen.Photos.route) {
+                    composable(Screen.Photos.route) {
+                        PhotosScreen()
+                    }
+                    composable(Screen.Search.route) {
+                        SearchScreen()
+                    }
+                    composable(Screen.Favorites.route) {
+                        SearchScreen()
+                    }
+                    composable(Screen.Settings.route) {
+                        SearchScreen()
+                    }
                 }
             }
         }
