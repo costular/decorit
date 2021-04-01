@@ -1,4 +1,5 @@
 object Versions {
+    val hiltNavigationCompose = "1.0.0-alpha01"
     val activityCompose = "1.3.0-alpha04"
     val kotlin = "1.4.31"
     val coroutines = "1.4.2"
@@ -32,6 +33,7 @@ object Versions {
     val compose = "1.0.0-beta03"
     val composeNavigation = "1.0.0-alpha09"
     val hiltJetpackViewModel = "1.0.0-alpha03"
+    val accompanist = "0.7.0"
 
     val preferences = "1.1.1"
     val preferencesDataStore = "1.0.0-alpha01"
@@ -54,6 +56,8 @@ object Deps {
     val hiltJetpackCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltJetpack}"
     val hiltJetpackViewModel =
         "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.hiltJetpackViewModel}"
+    val hiltNavigationCompose =
+        "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}"
     val roomRuntinme = "androidx.room:room-runtime:${Versions.room}"
     val roomCompiler = "androidx.room:room-compiler:${Versions.room}"
     val roomKtx = "androidx.room:room-ktx:${Versions.room}"
@@ -79,11 +83,15 @@ object Deps {
         "io.github.reactivecircus.flowbinding:flowbinding-android:${Versions.flowBinding}"
     val composeActivity = "androidx.activity:activity-compose:${Versions.activityCompose}"
     val composeUi = "androidx.compose.ui:ui:${Versions.compose}"
+    val composeFoundation = "androidx.compose.foundation:foundation:${Versions.compose}"
+    val composeLayout = "androidx.compose.foundation:foundation-layout:${Versions.compose}"
+    val composeRuntime = "androidx.compose.runtime:runtime:${Versions.compose}"
     val composeMaterial = "androidx.compose.material:material:${Versions.compose}"
     val composeMaterialIcons =
         "androidx.compose.material:material-icons-extended:${Versions.compose}"
     val composeUiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
     val composeNavigation = "androidx.navigation:navigation-compose:${Versions.composeNavigation}"
+    val accompanistCoil = "com.google.accompanist:accompanist-coil:${Versions.accompanist}"
 
     val junit = "junit:junit:4.13"
     val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
