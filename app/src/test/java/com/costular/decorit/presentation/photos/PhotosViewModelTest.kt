@@ -1,5 +1,6 @@
 package com.costular.decorit.presentation.photos
 
+/*
 import com.costular.decorit.data.SourceConstants
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
 import com.costular.decorit.domain.model.Photo
@@ -92,3 +93,4 @@ class PhotosViewModelTest : ReduxViewModelTest() {
     }
 
 }
+ */
