@@ -1,30 +1,28 @@
 package com.costular.decorit.presentation.search
 
+import androidx.lifecycle.viewModelScope
 import com.costular.decorit.core.net.DispatcherProvider
-import com.costular.decorit.di.AssistedViewModelFactory
-import com.costular.decorit.di.DaggerMvRxViewModelFactory
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
 import com.costular.decorit.domain.model.*
 import com.costular.decorit.presentation.base.MviViewModel
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.plus
 import timber.log.Timber
+import javax.inject.Inject
 
-class SearchViewModel @AssistedInject constructor(
-    @Assisted state: SearchState,
+@HiltViewModel
+class SearchViewModel @Inject constructor(
     private val dispatcher: DispatcherProvider,
     private val getPhotosInteractor: GetPhotosInteractor
-) : MviViewModel<SearchState>(state) {
+) : MviViewModel<SearchState>(SearchState()) {
 
     private val PER_PAGE = 20
 
     init {
-        setState { copy(filterColors = calculateColors(state.params.color)) }
+        viewModelScope.launchSetState { copy(filterColors = calculateColors(params.color)) }
     }
 
-    fun search(query: String = "", loadNext: Boolean = false) = withState { state ->
+    fun search(query: String = "", loadNext: Boolean = false) = viewModelScope.withState { state ->
         val params = if (!loadNext) {
             if (query.isNotEmpty()) {
                 state.params.copy(query = query)
@@ -38,6 +36,7 @@ class SearchViewModel @AssistedInject constructor(
 
         getPhotosInteractor(GetPhotosInteractor.Params(page, PER_PAGE, params))
             .onStart { setState { copy(isLoading = true) } }
+            .flowOn(dispatcher.io)
             .catch { Timber.e(it) }
             .onEach { photos ->
                 setState {
@@ -51,7 +50,7 @@ class SearchViewModel @AssistedInject constructor(
                         showFilters = params.areEmpty().not()
                     )
                 }
-            }.launchIn(viewModelScope + dispatcher.io)
+            }.launchIn(viewModelScope)
     }
 
     fun openFilter() {
@@ -62,19 +61,23 @@ class SearchViewModel @AssistedInject constructor(
         sendEvent(SearchEvents.OpenPhoto(photo))
     }
 
-    fun selectOrientation(orientation: PhotoOrientation) = withState { state ->
-        setState { copy(params = params.copy(orientation = orientation)) }
-        search(state.params.query)
+    fun selectOrientation(orientation: PhotoOrientation) {
+        viewModelScope.launchSetState {
+            copy(params = params.copy(orientation = orientation))
+        }
+        viewModelScope.withState { state ->
+            search(state.params.query)
+        }
     }
 
-    fun selectColor(color: PhotoColor) = withState { state ->
-        setState {
+    fun selectColor(color: PhotoColor) {
+        viewModelScope.launchSetState {
             copy(
                 params = params.copy(color = color),
                 filterColors = calculateColors(color)
             )
         }
-        search(state.params.query)
+        viewModelScope.withState { state -> search(state.params.query) }
     }
 
     private fun calculateColors(colorSelected: PhotoColor?): List<ColorFilterItem> =
@@ -85,14 +88,5 @@ class SearchViewModel @AssistedInject constructor(
                     colorSelected?.value == color
                 )
             }
-
-    @AssistedInject.Factory
-    interface Factory : AssistedViewModelFactory<SearchViewModel, SearchState> {
-        override fun create(state: SearchState): SearchViewModel
-    }
-
-    companion object :
-        DaggerMvRxViewModelFactory<SearchViewModel, SearchState>(SearchViewModel::class.java)
-
 
 }

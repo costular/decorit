@@ -68,6 +68,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 
     composeOptions {
@@ -98,19 +99,14 @@ dependencies {
     implementation(Deps.core)
     implementation(Deps.appCompat)
     implementation(Deps.viewModel)
-    implementation(Deps.uniflow)
-    implementation(Deps.mvrx)
-    implementation(Deps.mvrxCompose)
     implementation(Deps.coroutines)
     implementation(Deps.kotlin)
     implementation(Deps.timber)
     kapt(Deps.hiltCompiler)
-    implementation(Deps.hiltViewModel)
     kapt(Deps.hiltJetpackCompiler)
+    implementation(Deps.hiltJetpackViewModel)
     implementation(Deps.glide)
     kapt(Deps.glideCompiler)
-    implementation(Deps.navigationFragment)
-    implementation(Deps.navigationUi)
     implementation(Deps.appInitializer)
     implementation(Deps.preferences)
     implementation(Deps.preferencesDataStore)
@@ -131,12 +127,10 @@ dependencies {
     implementation(Deps.composeMaterialIcons)
     implementation(Deps.composeUi)
     implementation(Deps.composeUiTooling)
+    implementation(Deps.composeNavigation)
 
     testImplementation(Deps.junit)
-    testImplementation(Deps.uniflowTest)
-    testImplementation(Deps.uniflowAndroidTest)
     testImplementation(Deps.coroutinesTest)
-    testImplementation(Deps.navigationTest)
     testImplementation(Deps.turbine)
     testImplementation(Deps.truth)
     testImplementation(Deps.test)

@@ -1,9 +1,7 @@
 package com.costular.decorit.presentation.search
 
-import com.airbnb.mvrx.MavericksState
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.SearchParams
-import io.uniflow.core.flow.data.UIState
 
 data class SearchState(
     val items: List<Photo> = emptyList(),
@@ -12,4 +10,4 @@ data class SearchState(
     val params: SearchParams = SearchParams(),
     val filterColors: List<ColorFilterItem> = emptyList(),
     val showFilters: Boolean = false
-) : MavericksState
+)
