@@ -1,12 +1,15 @@
 package com.costular.decorit.presentation.search
 
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.costular.decorit.core.net.DispatcherProvider
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
 import com.costular.decorit.domain.model.*
 import com.costular.decorit.presentation.base.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,10 +19,27 @@ class SearchViewModel @Inject constructor(
     private val getPhotosInteractor: GetPhotosInteractor
 ) : MviViewModel<SearchState>(SearchState()) {
 
+    private val queryQueue: Channel<String> = Channel(capacity = 100)
+
     private val PER_PAGE = 20
 
     init {
         viewModelScope.launchSetState { copy(filterColors = calculateColors(params.color)) }
+
+        viewModelScope.launch {
+            queryQueue
+                .consumeAsFlow()
+                .distinctUntilChanged()
+                .debounce(300L)
+                .collect { query ->
+                    search(query)
+                }
+        }
+        enqueueQuery("")
+    }
+
+    fun enqueueQuery(query: String) = viewModelScope.launch {
+        queryQueue.send(query)
     }
 
     fun search(query: String = "", loadNext: Boolean = false) = viewModelScope.withState { state ->

@@ -15,13 +15,16 @@ import com.costular.decorit.domain.model.Photo
 fun PhotoGrid(
     photos: List<Photo>,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(all = 8.dp),
+    listState: LazyListState = rememberLazyListState(),
     isLoadingMore: Boolean, // TODO: 1/4/21 use loading
     onPhotoClick: (photo: Photo) -> Unit,
     loadNextPage: (() -> Unit)? = null
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(all = 8.dp),
+        contentPadding = contentPadding,
+        state = listState
     ) {
         itemsIndexed(photos) { index, photo ->
             if (index == photos.lastIndex) {
