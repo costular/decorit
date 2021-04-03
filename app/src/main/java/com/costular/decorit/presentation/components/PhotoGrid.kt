@@ -1,6 +1,7 @@
 package com.costular.decorit.presentation.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,7 +16,7 @@ import com.costular.decorit.domain.model.Photo
 fun PhotoGrid(
     photos: List<Photo>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(all = 8.dp),
+    contentPadding: PaddingValues = PaddingValues(all = 16.dp),
     listState: LazyListState = rememberLazyListState(),
     isLoadingMore: Boolean, // TODO: 1/4/21 use loading
     onPhotoClick: (photo: Photo) -> Unit,
@@ -24,6 +25,7 @@ fun PhotoGrid(
     LazyColumn(
         modifier = modifier,
         contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         state = listState
     ) {
         itemsIndexed(photos) { index, photo ->
@@ -33,9 +35,7 @@ fun PhotoGrid(
 
             Wallpaper(
                 photoUrl = photo.medium,
-                modifier = Modifier
-                    .fillMaxHeight(0.7f)
-                    .padding(8.dp),
+                modifier = Modifier.fillMaxHeight(0.7f),
                 onPhotoClicked = { onPhotoClick.invoke(photo) }
             )
         }

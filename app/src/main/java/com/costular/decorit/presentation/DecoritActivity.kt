@@ -22,7 +22,9 @@ import androidx.compose.ui.tooling.preview.Device
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import com.costular.decorit.presentation.navigation.Screen
+import com.costular.decorit.presentation.photodetail.PhotoDetailScreen
 import com.costular.decorit.presentation.photos.PhotosScreen
 import com.costular.decorit.presentation.search.SearchScreen
 import com.costular.decorit.presentation.ui.DecoritTheme
@@ -58,7 +60,11 @@ class DecoritActivity : AppCompatActivity() {
             Box(modifier = Modifier.padding(innerPading)) {
                 NavHost(navController, startDestination = Screen.Photos.route) {
                     composable(Screen.Photos.route) {
-                        PhotosScreen()
+                        PhotosScreen(
+                            onPhotoClick = { photo ->
+                                navController.navigate("photos/${photo.id}")
+                            }
+                        )
                     }
                     composable(Screen.Search.route) {
                         SearchScreen()
@@ -68,6 +74,14 @@ class DecoritActivity : AppCompatActivity() {
                     }
                     composable(Screen.Settings.route) {
                         SearchScreen()
+                    }
+                    composable("photos/{photoId}") { backStackEntry ->
+                        PhotoDetailScreen(
+                            photoId = backStackEntry.arguments?.getString("photoId")!!,
+                            onGoBack = {
+                                navController.popBackStack()
+                            }
+                        )
                     }
                 }
             }

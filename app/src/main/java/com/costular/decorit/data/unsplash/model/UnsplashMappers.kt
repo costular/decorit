@@ -13,7 +13,7 @@ fun UnsplashUserDTO.toPhotographer(): Photographer =
 
 fun UnsplashPhotoDTO.toPhoto(): Photo =
     Photo(
-        this.id,
+        "${UNSPLASH}-$id",
         this.width,
         this.height,
         UNSPLASH,
