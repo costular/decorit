@@ -5,5 +5,7 @@ import com.costular.decorit.domain.model.Photo
 
 data class PhotoDetailState(
     val photoId: String? = null,
-    val photo: Async<Photo> = Async.Uninitialized
+    val photo: Async<Photo> = Async.Uninitialized,
+    val isDownloading: Boolean = false,
+    val isSettingAsWallpaper: Boolean = false
 )

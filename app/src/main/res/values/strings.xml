@@ -15,4 +15,6 @@
     <string name="search_filter_orientation_any">Any</string>
     <string name="search_filter_show_results_button">Show results</string>
     <string name="search_filter_color_header">Color</string>
+
+    <string name="cancel">Cancel</string>
 </resources>

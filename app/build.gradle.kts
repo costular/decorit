@@ -117,6 +117,7 @@ dependencies {
     implementation(Deps.lifecycleRuntime)
     implementation(Deps.lifecycleLiveData)
     implementation(Deps.lifecycleCommon)
+    implementation(Deps.hiltWork)
     debugImplementation(Deps.chuckerDebug)
     releaseImplementation(Deps.chuckerRelease)
     implementation(Deps.flick)
@@ -133,6 +134,7 @@ dependencies {
     implementation(Deps.composeNavigation)
     implementation(Deps.accompanistCoil)
     implementation(Deps.hiltNavigationCompose)
+    implementation(Deps.workManager)
 
     testImplementation(Deps.junit)
     testImplementation(Deps.coroutinesTest)

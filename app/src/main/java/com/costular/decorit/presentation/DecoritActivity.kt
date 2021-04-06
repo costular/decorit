@@ -1,28 +1,20 @@
 package com.costular.decorit.presentation
 
-import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.*
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Device
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.NavType
 import com.costular.decorit.presentation.navigation.Screen
 import com.costular.decorit.presentation.photodetail.PhotoDetailScreen
 import com.costular.decorit.presentation.photos.PhotosScreen
@@ -32,6 +24,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DecoritActivity : AppCompatActivity() {
+
+    private val routes = listOf(
+        Screen.Photos,
+        Screen.Search,
+        Screen.Settings
+    )
+    private val routeDestinations = routes.map { it.route }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +43,19 @@ class DecoritActivity : AppCompatActivity() {
 
     @Composable
     private fun Navigation() {
-        val routes = listOf(
-            Screen.Photos,
-            Screen.Search,
-            Screen.Favorites,
-            Screen.Settings
-        )
         val navController = rememberNavController()
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val isHomeDestination by remember(navBackStackEntry) {
+            derivedStateOf {
+                navBackStackEntry?.arguments?.getString(KEY_ROUTE) in routeDestinations
+            }
+        }
 
         Scaffold(
             bottomBar = {
-                BottomNavigation(navController = navController, routes = routes)
+                if (isHomeDestination) {
+                    BottomNavigation(navController = navController, routes = routes)
+                }
             }
         ) { innerPading ->
             Box(modifier = Modifier.padding(innerPading)) {
@@ -67,9 +68,6 @@ class DecoritActivity : AppCompatActivity() {
                         )
                     }
                     composable(Screen.Search.route) {
-                        SearchScreen()
-                    }
-                    composable(Screen.Favorites.route) {
                         SearchScreen()
                     }
                     composable(Screen.Settings.route) {

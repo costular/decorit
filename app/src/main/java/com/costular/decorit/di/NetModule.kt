@@ -56,4 +56,8 @@ class NetModule {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
 
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().build()
+
 }

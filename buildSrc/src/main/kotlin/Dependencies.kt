@@ -32,8 +32,10 @@ object Versions {
     val snapHelper = "2.2.1"
     val compose = "1.0.0-beta03"
     val composeNavigation = "1.0.0-alpha09"
+    val hiltWork = "1.0.0-beta01"
     val hiltJetpackViewModel = "1.0.0-alpha03"
     val accompanist = "0.7.0"
+    val workManager = "2.5.0"
 
     val preferences = "1.1.1"
     val preferencesDataStore = "1.0.0-alpha01"
@@ -58,6 +60,7 @@ object Deps {
         "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.hiltJetpackViewModel}"
     val hiltNavigationCompose =
         "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}"
+    val hiltWork = "androidx.hilt:hilt-work:${Versions.hiltWork}"
     val roomRuntinme = "androidx.room:room-runtime:${Versions.room}"
     val roomCompiler = "androidx.room:room-compiler:${Versions.room}"
     val roomKtx = "androidx.room:room-ktx:${Versions.room}"
@@ -92,6 +95,7 @@ object Deps {
     val composeUiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
     val composeNavigation = "androidx.navigation:navigation-compose:${Versions.composeNavigation}"
     val accompanistCoil = "com.google.accompanist:accompanist-coil:${Versions.accompanist}"
+    val workManager = "androidx.work:work-runtime-ktx:${Versions.workManager}"
 
     val junit = "junit:junit:4.13"
     val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
