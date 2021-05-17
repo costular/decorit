@@ -26,7 +26,7 @@ class WorkerRunner @Inject constructor(
     suspend fun listenWorkerInfo(uuid: UUID): Flow<WorkInfo> {
         return flow {
             do {
-                delay(500)
+                delay(500) // To avoid spamming
                 val value = WorkManager.getInstance(applicationContext)
                     .getWorkInfoById(uuid)
                     .await()
