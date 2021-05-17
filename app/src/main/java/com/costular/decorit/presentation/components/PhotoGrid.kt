@@ -6,10 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.costular.decorit.domain.model.Photo
+import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -29,35 +33,28 @@ fun PhotoGrid(
         state = listState
     ) {
         itemsIndexed(photos) { index, photo ->
-            if (index == photos.lastIndex) {
-                loadNextPage?.invoke()
-            }
-
             Wallpaper(
                 photoUrl = photo.medium,
                 modifier = Modifier.fillMaxHeight(0.7f),
                 onPhotoClicked = { onPhotoClick.invoke(photo) }
             )
-        }
-    }
-    /*
-    val scrollState = rememberScrollState()
-    
-    Column(
-        modifier = modifier.verticalScroll(scrollState)
-    ) {
-        StaggeredVerticalGrid(
-            maxColumnWidth = 220.dp,
-            modifier = Modifier.padding(4.dp)
-        ) {
-            photos.forEach { photo ->
-                Wallpaper(
-                    photoUrl = photo.medium,
-                    modifier = Modifier.padding(4.dp),
-                    onPhotoClicked = { onPhotoClick.invoke(photo) }
-                )
+
+            if (index == photos.lastIndex) {
+                LaunchedEffect(Unit) {
+                    loadNextPage?.invoke()
+                }
             }
         }
     }
-     */
+}
+
+@Composable
+private fun LoadingMore(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp), contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
 }
