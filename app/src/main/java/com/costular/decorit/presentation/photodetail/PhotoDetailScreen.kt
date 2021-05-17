@@ -36,6 +36,7 @@ import com.google.accompanist.coil.CoilImage
 import kotlinx.coroutines.flow.collect
 import android.content.Intent
 import androidx.core.net.toUri
+import com.google.accompanist.coil.rememberCoilPainter
 
 @Composable
 fun PhotoDetailScreen(photoId: String, onGoBack: () -> Unit) {
@@ -147,14 +148,16 @@ private fun PhotographerAvatar(
 ) {
     Box(modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)) {
         if (avatarUrl != null) {
-            CoilImage(
-                data = avatarUrl,
+            Image(
+                painter = rememberCoilPainter(
+                    request = avatarUrl,
+                    requestBuilder = {
+                        transformations(CircleCropTransformation())
+                    }
+                ),
                 contentDescription = "avatar",
                 modifier = modifier,
-                contentScale = ContentScale.Crop,
-                requestBuilder = {
-                    transformations(CircleCropTransformation())
-                }
+                contentScale = ContentScale.Crop
             )
         } else {
             Box(
@@ -232,10 +235,9 @@ private fun Success(
     onSetAsWallpaper: () -> Unit
 ) {
     Box {
-        CoilImage(
-            data = photo.large,
+        Image(
+            painter = rememberCoilPainter(request = photo.large, fadeIn = true),
             modifier = Modifier.fillMaxSize(),
-            fadeIn = true,
             contentDescription = "image"
         )
 
@@ -254,10 +256,10 @@ private fun Success(
 private fun Failure() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "Something wen't wrong :(",
+            text = "Something wen't wrong :(", // TODO: 6/4/21 do not hardcode this
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.h5
         )
     }
 }

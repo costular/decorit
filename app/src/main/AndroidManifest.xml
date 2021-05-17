@@ -32,6 +32,8 @@
             android:authorities="${applicationId}.workmanager-init"
             tools:node="remove" />
 
+        <activity android:name=".presentation.settings.SettingsActivity" />
+
     </application>
 
 </manifest>

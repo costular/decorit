@@ -15,6 +15,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.costular.decorit.presentation.more.MoreScreen
 import com.costular.decorit.presentation.navigation.Screen
 import com.costular.decorit.presentation.photodetail.PhotoDetailScreen
 import com.costular.decorit.presentation.photos.PhotosScreen
@@ -28,7 +29,7 @@ class DecoritActivity : AppCompatActivity() {
     private val routes = listOf(
         Screen.Photos,
         Screen.Search,
-        Screen.Settings
+        Screen.More
     )
     private val routeDestinations = routes.map { it.route }
 
@@ -57,8 +58,8 @@ class DecoritActivity : AppCompatActivity() {
                     BottomNavigation(navController = navController, routes = routes)
                 }
             }
-        ) { innerPading ->
-            Box(modifier = Modifier.padding(innerPading)) {
+        ) { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
                 NavHost(navController, startDestination = Screen.Photos.route) {
                     composable(Screen.Photos.route) {
                         PhotosScreen(
@@ -70,8 +71,8 @@ class DecoritActivity : AppCompatActivity() {
                     composable(Screen.Search.route) {
                         SearchScreen()
                     }
-                    composable(Screen.Settings.route) {
-                        SearchScreen()
+                    composable(Screen.More.route) {
+                        MoreScreen()
                     }
                     composable("photos/{photoId}") { backStackEntry ->
                         PhotoDetailScreen(

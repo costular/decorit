@@ -32,6 +32,8 @@ val magenta200 = Color(0xFFce93d8)
 val green500 = Color(0xFF4caf50)
 val green200 = Color(0xFFa5d6a7)
 
+val textSecondary = Color(0x99000000)
+
 fun Colors.withBrandedSurface() = copy(
     surface = primary.copy(alpha = 0.08f).compositeOver(this.surface),
 )

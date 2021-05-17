@@ -11,8 +11,8 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Config.compileVersion)
-    buildToolsVersion(Config.buildToolsVersion)
+    compileSdk = Config.compileVersion
+    buildToolsVersion = Config.buildToolsVersion
     defaultConfig {
         applicationId = "com.costular.decorit"
         minSdkVersion(Config.minSdk)
@@ -93,6 +93,7 @@ kapt {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(Deps.fragment)
     implementation(Deps.hilt)
     implementation(Deps.constraintLayout)
     implementation(Deps.material)

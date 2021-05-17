@@ -1,5 +1,6 @@
 package com.costular.decorit.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Card
@@ -10,6 +11,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.coil.CoilImage
+import com.google.accompanist.coil.rememberCoilPainter
 
 @Composable
 fun Wallpaper(
@@ -22,10 +24,9 @@ fun Wallpaper(
             .clip(MaterialTheme.shapes.medium)
             .clickable { onPhotoClicked?.invoke() }
     ) {
-        CoilImage(
-            data = photoUrl,
+        Image(
+            painter = rememberCoilPainter(request = photoUrl, fadeIn = true),
             contentDescription = "Wallpaper",
-            fadeIn = true,
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth
         )

@@ -5,7 +5,7 @@ buildscript {
         maven("https://plugins.gradle.org/m2/")
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-alpha12")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha15")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.2")
