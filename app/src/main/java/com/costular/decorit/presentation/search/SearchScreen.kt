@@ -55,7 +55,7 @@ fun SearchScreen() {
                 photos = state.items,
                 isLoadingMore = state.isLoading,
                 onPhotoClick = { viewModel.openPhoto(it) },
-                loadNextPage = { viewModel.search() }
+                loadNextPage = { viewModel.search(loadNext = true) }
             )
 
             var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
@@ -78,7 +78,7 @@ fun SearchScreen() {
                         hint = stringResource(id = R.string.search_hint),
                         onValueChange = { newQuery ->
                             searchQuery = newQuery
-                            // viewModel.enqueueQuery(newQuery.text)
+                            viewModel.enqueueQuery(newQuery.text)
                         }
                     )
                 }

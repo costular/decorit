@@ -35,7 +35,6 @@ class SearchViewModel @Inject constructor(
                     search(query)
                 }
         }
-        enqueueQuery("")
     }
 
     fun enqueueQuery(query: String) = viewModelScope.launch {
