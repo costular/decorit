@@ -1,5 +1,6 @@
 package com.costular.decorit.data.repository
 
+import com.costular.decorit.data.repository.photos.DefaultPhotoRepository
 import com.costular.decorit.data.unsplash.UnsplashPhotoDataSource
 import com.costular.decorit.domain.repository.PhotoRepository
 import io.mockk.coEvery

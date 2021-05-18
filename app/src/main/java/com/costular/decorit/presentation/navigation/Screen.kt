@@ -9,5 +9,5 @@ import com.costular.decorit.R
 sealed class Screen(val route: String, @StringRes val resourceId: Int, val icon: ImageVector) {
     object Photos : Screen("photos", R.string.nav_photos, Icons.Outlined.Wallpaper)
     object Search : Screen("search", R.string.nav_search, Icons.Outlined.Search)
-    object More : Screen("more", R.string.nav_more, Icons.Outlined.MoreHoriz)
+    object More : Screen("more", R.string.nav_more, Icons.Outlined.Menu)
 }

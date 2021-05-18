@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.costular.decorit.domain.model.Photo
+import com.costular.decorit.domain.model.PhotoQuality
 import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -23,8 +24,9 @@ fun PhotoGrid(
     contentPadding: PaddingValues = PaddingValues(all = 16.dp),
     listState: LazyListState = rememberLazyListState(),
     isLoadingMore: Boolean, // TODO: 1/4/21 use loading
+    photoQuality: PhotoQuality = PhotoQuality.Medium,
     onPhotoClick: (photo: Photo) -> Unit,
-    loadNextPage: (() -> Unit)? = null
+    loadNextPage: (() -> Unit)? = null,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -34,7 +36,7 @@ fun PhotoGrid(
     ) {
         itemsIndexed(photos) { index, photo ->
             Wallpaper(
-                photoUrl = photo.medium,
+                photoUrl = photo.photoUrlFromQuality(photoQuality),
                 modifier = Modifier.fillMaxHeight(0.7f),
                 onPhotoClicked = { onPhotoClick.invoke(photo) }
             )

@@ -1,4 +1,4 @@
-package com.costular.decorit.data.repository
+package com.costular.decorit.data.repository.photos
 
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.SearchParams

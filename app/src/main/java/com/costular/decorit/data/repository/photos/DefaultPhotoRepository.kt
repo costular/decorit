@@ -1,4 +1,4 @@
-package com.costular.decorit.data.repository
+package com.costular.decorit.data.repository.photos
 
 import com.costular.decorit.data.SourceConstants
 import com.costular.decorit.data.unsplash.UnsplashPhotoDataSource

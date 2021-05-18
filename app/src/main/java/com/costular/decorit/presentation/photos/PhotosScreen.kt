@@ -29,7 +29,7 @@ fun PhotosScreen(onPhotoClick: (photo: Photo) -> Unit) {
 
     PhotoContent(
         state = state,
-        onPhotoClick = onPhotoClick,
+        onPhotoClick = viewModel::openPhoto,
         loadNextPage = { viewModel.load() }
     )
 }

@@ -5,6 +5,10 @@
     <string name="nav_search">Search</string>
     <string name="nav_more">More</string>
 
+    <string name="something_went_wrong">Sorry! Something wen\'t wrong :(</string>
+    <string name="wallpaper_set_as">Set as</string>
+    <string name="photo_downloaded_successfully">Photo downloaded successfully!</string>
+
     <!-- Search -->
     <string name="search_hint">Search photos…</string>
     <string name="search_filter_button">Filter</string>

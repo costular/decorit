@@ -42,6 +42,9 @@ class PhotoDetailViewModel @Inject constructor(
                     .catch { Timber.e(it) }
                     .collect { workInfo ->
                         setState { copy(isDownloading = !workInfo.state.isFinished) }
+                        if (workInfo.state.isFinished) {
+                            sendEvent(PhotoDetailEvents.DownloadedSuccessfully)
+                        }
                     }
             }
         }
@@ -61,6 +64,7 @@ class PhotoDetailViewModel @Inject constructor(
                         if (workInfo.state.isFinished) {
                             val uri = workInfo.outputData.getString(DownloadWorker.OutputUri)
                             if (uri != null) {
+                                sendEvent(PhotoDetailEvents.DownloadedSuccessfully)
                                 sendEvent(PhotoDetailEvents.SetAsWallpaper(uri))
                             }
                         }

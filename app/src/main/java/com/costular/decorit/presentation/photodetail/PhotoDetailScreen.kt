@@ -35,13 +35,17 @@ import com.costular.decorit.presentation.ui.DecoritTheme
 import com.google.accompanist.coil.CoilImage
 import kotlinx.coroutines.flow.collect
 import android.content.Intent
+import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import com.google.accompanist.coil.rememberCoilPainter
+import kotlinx.coroutines.launch
 
 @Composable
 fun PhotoDetailScreen(photoId: String, onGoBack: () -> Unit) {
     val viewModel: PhotoDetailViewModel = hiltNavGraphViewModel()
     val context = LocalContext.current
+    val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(viewModel) {
         viewModel.uiEvents.collect { event ->
@@ -55,9 +59,14 @@ fun PhotoDetailScreen(photoId: String, onGoBack: () -> Unit) {
                     context.startActivity(
                         Intent.createChooser(
                             intent,
-                            "Set as:"
+                            context.getString(R.string.wallpaper_set_as)
                         )
-                    ) // TODO: 6/4/21 do not harcode "set as" text
+                    )
+                }
+                is PhotoDetailEvents.DownloadedSuccessfully -> {
+                    coroutineScope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(context.getString(R.string.photo_downloaded_successfully))
+                    }
                 }
             }
         }
@@ -74,16 +83,19 @@ fun PhotoDetailScreen(photoId: String, onGoBack: () -> Unit) {
             Loading()
         }
         is Async.Success -> {
-            Success(
-                photoState(),
-                onDownload = {
-                    viewModel.download()
-                },
-                onSetAsWallpaper = {
-                    viewModel.setAsWallpaper()
-                },
-                isDownloading = state.isDownloading
-            )
+            Scaffold(scaffoldState = scaffoldState) {
+                Success(
+                    photoState(),
+                    onDownload = {
+                        viewModel.download()
+                    },
+                    onSetAsWallpaper = {
+                        viewModel.setAsWallpaper()
+                    },
+                    isDownloading = state.isDownloading,
+                    isSettingAsWallpaper = state.isSettingAsWallpaper
+                )
+            }
         }
         is Async.Failure -> {
             Failure()
@@ -119,6 +131,7 @@ private fun ActionsBar(
     photographer: Photographer,
     source: String,
     isDownloading: Boolean,
+    isSettingAsWallpaper: Boolean,
     onDownload: () -> Unit,
     onSetAsWallpaper: () -> Unit,
     modifier: Modifier = Modifier,
@@ -136,7 +149,8 @@ private fun ActionsBar(
             modifier = Modifier.weight(1f),
             onDownload = onDownload,
             onSetAsWallpaper = onSetAsWallpaper,
-            isDownloading = isDownloading
+            isDownloading = isDownloading,
+            isSettingAsWallpaper = isSettingAsWallpaper
         )
     }
 }
@@ -186,6 +200,7 @@ private fun PhotographerNameAndSource(
 private fun ActionButtons(
     modifier: Modifier = Modifier,
     isDownloading: Boolean,
+    isSettingAsWallpaper: Boolean,
     onDownload: () -> Unit,
     onSetAsWallpaper: () -> Unit
 ) {
@@ -212,7 +227,11 @@ private fun ActionButtons(
             modifier = Modifier.size(40.dp),
             onClick = onSetAsWallpaper,
         ) {
-            Icon(imageVector = Icons.Default.Wallpaper, contentDescription = "set as wallpaper")
+            if (isSettingAsWallpaper) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            } else {
+                Icon(imageVector = Icons.Default.Wallpaper, contentDescription = "set as wallpaper")
+            }
         }
     }
 }
@@ -231,6 +250,7 @@ private fun Loading() {
 private fun Success(
     photo: Photo,
     isDownloading: Boolean,
+    isSettingAsWallpaper: Boolean,
     onDownload: () -> Unit,
     onSetAsWallpaper: () -> Unit
 ) {
@@ -246,7 +266,8 @@ private fun Success(
             onSetAsWallpaper = onSetAsWallpaper,
             photographer = photo.photographer,
             source = photo.sourceId,
-            isDownloading = isDownloading
+            isDownloading = isDownloading,
+            isSettingAsWallpaper = isSettingAsWallpaper
         )
     }
 
@@ -256,7 +277,7 @@ private fun Success(
 private fun Failure() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "Something wen't wrong :(", // TODO: 6/4/21 do not hardcode this
+            text = stringResource(id = R.string.something_went_wrong),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h5

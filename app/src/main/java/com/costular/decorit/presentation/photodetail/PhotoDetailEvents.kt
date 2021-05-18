@@ -6,4 +6,6 @@ sealed class PhotoDetailEvents : UiEvent {
 
     data class SetAsWallpaper(val uri: String) : PhotoDetailEvents()
 
+    object DownloadedSuccessfully : PhotoDetailEvents()
+
 }

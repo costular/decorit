@@ -3,6 +3,7 @@ package com.costular.decorit.domain.interactor
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.SearchParams
 import com.costular.decorit.domain.repository.PhotoRepository
+import com.costular.decorit.domain.repository.SettingsRepository
 
 class GetPhotosInteractor(
     private val photoRepository: PhotoRepository

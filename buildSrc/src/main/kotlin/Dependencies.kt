@@ -35,10 +35,10 @@ object Versions {
     val workManager = "2.5.0"
 
     val preferences = "1.1.1"
-    val preferencesDataStore = "1.0.0-alpha01"
+    val preferencesDataStore = "1.0.0-beta01"
     val kaspresso = "1.1.0"
     val truth = "1.2.0"
-    val turbine = "0.2.1"
+    val turbine = "0.5.0"
 }
 
 

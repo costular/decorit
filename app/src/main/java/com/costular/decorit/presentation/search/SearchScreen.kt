@@ -54,6 +54,7 @@ fun SearchScreen() {
                 ),
                 photos = state.items,
                 isLoadingMore = state.isLoading,
+                photoQuality = state.photoQuality,
                 onPhotoClick = { viewModel.openPhoto(it) },
                 loadNextPage = { viewModel.search(loadNext = true) }
             )

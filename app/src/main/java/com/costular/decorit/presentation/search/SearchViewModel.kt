@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.costular.decorit.core.net.DispatcherProvider
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
+import com.costular.decorit.domain.interactor.GetViewPhotoQualityInteractor
 import com.costular.decorit.domain.model.*
 import com.costular.decorit.presentation.base.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val dispatcher: DispatcherProvider,
-    private val getPhotosInteractor: GetPhotosInteractor
+    private val getPhotosInteractor: GetPhotosInteractor,
+    private val getViewPhotoQualityInteractor: GetViewPhotoQualityInteractor
 ) : MviViewModel<SearchState>(SearchState()) {
 
     private val queryQueue: Channel<String> = Channel(capacity = 100)
@@ -24,6 +26,15 @@ class SearchViewModel @Inject constructor(
     private val PER_PAGE = 20
 
     init {
+        viewModelScope.launch {
+            getViewPhotoQualityInteractor(Unit)
+
+            getViewPhotoQualityInteractor.observe()
+                .flowOn(dispatcher.io)
+                .catch { Timber.e(it) }
+                .collectAndSetState { copy(photoQuality = it) }
+        }
+
         viewModelScope.launchSetState { copy(filterColors = calculateColors(params.color)) }
 
         viewModelScope.launch {
@@ -35,6 +46,7 @@ class SearchViewModel @Inject constructor(
                     search(query)
                 }
         }
+        enqueueQuery("")
     }
 
     fun enqueueQuery(query: String) = viewModelScope.launch {

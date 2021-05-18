@@ -99,7 +99,6 @@ class DecoritActivity : AppCompatActivity() {
                 BottomNavigationItem(
                     selectedContentColor = MaterialTheme.colors.primary,
                     unselectedContentColor = MaterialTheme.colors.onSurface,
-                    alwaysShowLabel = false,
                     icon = { Icon(imageVector = screen.icon, "icon") },
                     label = { Text(stringResource(screen.resourceId)) },
                     selected = currentRoute == screen.route,
