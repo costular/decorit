@@ -94,6 +94,7 @@ private fun AboutApp(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.h6)
+        Spacer(modifier = Modifier.height(4.dp))
         Text(text = stringResource(id = R.string.more_app_about_description))
     }
 }
