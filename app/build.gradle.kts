@@ -15,8 +15,8 @@ android {
     buildToolsVersion = Config.buildToolsVersion
     defaultConfig {
         applicationId = "com.costular.decorit"
-        minSdkVersion(Config.minSdk)
-        targetSdkVersion(Config.targetSdk)
+        minSdk = Config.minSdk
+        targetSdk = Config.targetSdk
         versionCode = Config.versionCode
         versionName = Config.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
