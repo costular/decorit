@@ -1,5 +1,6 @@
 package com.costular.decorit.presentation.search
 
+/*
 import android.graphics.Color
 import com.costular.decorit.data.SourceConstants
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
@@ -319,3 +320,4 @@ class SearchViewModelTest : ReduxViewModelTest() {
     }
 
 }
+ */

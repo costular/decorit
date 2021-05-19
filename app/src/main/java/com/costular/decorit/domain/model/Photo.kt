@@ -15,4 +15,13 @@ data class Photo(
     val large: String,
     val medium: String,
     val small: String
-) : Parcelable
+) : Parcelable {
+
+    fun photoUrlFromQuality(photoQuality: PhotoQuality): String = when (photoQuality) {
+        PhotoQuality.Low -> small
+        PhotoQuality.Medium -> medium
+        PhotoQuality.Full -> large
+        PhotoQuality.High -> original
+    }
+
+}

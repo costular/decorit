@@ -1,9 +1,9 @@
 package com.costular.decorit.presentation.search
 
 import com.costular.decorit.domain.model.Photo
-import io.uniflow.core.flow.data.UIEvent
+import com.costular.decorit.presentation.base.UiEvent
 
-sealed class SearchEvents : UIEvent() {
+sealed class SearchEvents : UiEvent {
 
     object OpenFilters : SearchEvents()
 

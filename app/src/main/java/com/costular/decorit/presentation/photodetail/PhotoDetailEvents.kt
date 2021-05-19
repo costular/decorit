@@ -1,9 +1,11 @@
 package com.costular.decorit.presentation.photodetail
 
-import io.uniflow.core.flow.data.UIEvent
+import com.costular.decorit.presentation.base.UiEvent
 
-sealed class PhotoDetailEvents : UIEvent() {
+sealed class PhotoDetailEvents : UiEvent {
 
-    data class LoadPhoto(val url: String) : PhotoDetailEvents()
+    data class SetAsWallpaper(val uri: String) : PhotoDetailEvents()
+
+    object DownloadedSuccessfully : PhotoDetailEvents()
 
 }

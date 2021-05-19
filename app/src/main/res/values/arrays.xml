@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="quality_names">
+        <item>@string/quality_low</item>
+        <item>@string/quality_medium</item>
+        <item>@string/quality_high</item>
+        <item>@string/quality_full</item>
+    </string-array>
+
+    <string-array name="quality_values">
+        <item>low</item>
+        <item>medium</item>
+        <item>high</item>
+        <item>full</item>
+    </string-array>
+
+</resources>

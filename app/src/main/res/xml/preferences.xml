@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/preferences_quality_title">
+
+        <ListPreference
+            android:title="@string/preferences_quality_view"
+            android:key="quality_view"
+            android:entries="@array/quality_names"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="medium"
+            android:entryValues="@array/quality_values" />
+
+        <ListPreference
+            android:title="@string/preferences_quality_download"
+            android:key="quality_download"
+            android:entries="@array/quality_names"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="high"
+            android:entryValues="@array/quality_values" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

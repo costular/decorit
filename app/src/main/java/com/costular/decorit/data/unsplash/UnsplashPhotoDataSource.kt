@@ -1,6 +1,6 @@
 package com.costular.decorit.data.unsplash
 
-import com.costular.decorit.data.repository.PhotoDataSource
+import com.costular.decorit.data.repository.photos.PhotoDataSource
 import com.costular.decorit.data.unsplash.model.toPhoto
 import com.costular.decorit.domain.model.*
 

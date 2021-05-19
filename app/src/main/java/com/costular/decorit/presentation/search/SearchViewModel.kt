@@ -1,26 +1,59 @@
 package com.costular.decorit.presentation.search
 
-import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.costular.decorit.core.net.DispatcherProvider
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
+import com.costular.decorit.domain.interactor.GetViewPhotoQualityInteractor
 import com.costular.decorit.domain.model.*
-import com.costular.decorit.presentation.base.ReduxViewModel
-import io.uniflow.core.flow.actionOn
+import com.costular.decorit.presentation.base.MviViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class SearchViewModel @ViewModelInject constructor(
-    dispatcher: DispatcherProvider,
-    private val getPhotosInteractor: GetPhotosInteractor
-) : ReduxViewModel(dispatcher, SearchState()) {
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val dispatcher: DispatcherProvider,
+    private val getPhotosInteractor: GetPhotosInteractor,
+    private val getViewPhotoQualityInteractor: GetViewPhotoQualityInteractor
+) : MviViewModel<SearchState>(SearchState()) {
+
+    private val queryQueue: Channel<String> = Channel(capacity = 100)
+
+    private val PER_PAGE = 20
 
     init {
-        action {
-            setState(SearchState(filterColors = calculateColors(null)))
+        viewModelScope.launch {
+            getViewPhotoQualityInteractor(Unit)
+
+            getViewPhotoQualityInteractor.observe()
+                .flowOn(dispatcher.io)
+                .catch { Timber.e(it) }
+                .collectAndSetState { copy(photoQuality = it) }
         }
+
+        viewModelScope.launchSetState { copy(filterColors = calculateColors(params.color)) }
+
+        viewModelScope.launch {
+            queryQueue
+                .consumeAsFlow()
+                .distinctUntilChanged()
+                .debounce(300L)
+                .collect { query ->
+                    search(query)
+                }
+        }
+        enqueueQuery("")
     }
 
-    fun search(query: String = "", loadNext: Boolean = false) = actionOn<SearchState> { state ->
+    fun enqueueQuery(query: String) = viewModelScope.launch {
+        queryQueue.send(query)
+    }
+
+    fun search(query: String = "", loadNext: Boolean = false) = viewModelScope.withState { state ->
         val params = if (!loadNext) {
             if (query.isNotEmpty()) {
                 state.params.copy(query = query)
@@ -33,44 +66,49 @@ class SearchViewModel @ViewModelInject constructor(
         val page = if (!loadNext) 1 else state.page + 1
 
         getPhotosInteractor(GetPhotosInteractor.Params(page, PER_PAGE, params))
-            .onStart { setState(state.copy(isLoading = true)) }
+            .onStart { setState { copy(isLoading = true) } }
+            .flowOn(dispatcher.io)
             .catch { Timber.e(it) }
-            .collect { photos ->
-                val items = if (!loadNext) photos else state.items + photos
+            .onEach { photos ->
+                setState {
+                    val items = if (!loadNext) photos else items + photos
 
-                setState(
-                    state.copy(
+                    copy(
                         items = items,
                         page = page,
                         isLoading = false,
                         params = params,
                         showFilters = params.areEmpty().not()
                     )
-                )
-            }
+                }
+            }.launchIn(viewModelScope)
     }
 
-    fun openFilter() = action {
+    fun openFilter() {
         sendEvent(SearchEvents.OpenFilters)
     }
 
-    fun openPhoto(photo: Photo) = action {
+    fun openPhoto(photo: Photo) {
         sendEvent(SearchEvents.OpenPhoto(photo))
     }
 
-    fun selectOrientation(orientation: PhotoOrientation) = actionOn<SearchState> { state ->
-        setState(state.copy(params = state.params.copy(orientation = orientation)))
-        search(state.params.query)
+    fun selectOrientation(orientation: PhotoOrientation) {
+        viewModelScope.launchSetState {
+            copy(params = params.copy(orientation = orientation))
+        }
+        viewModelScope.withState { state ->
+            search(state.params.query)
+        }
     }
 
-    fun selectColor(color: PhotoColor) = actionOn<SearchState> { state ->
-        setState(
-            state.copy(
-                params = state.params.copy(color = color),
+    fun selectColor(color: PhotoColor) {
+        viewModelScope.launchSetState {
+            copy(
+                params = params.copy(color = color),
                 filterColors = calculateColors(color)
             )
-        )
-        search(state.params.query)
+        }
+        viewModelScope.withState { state -> search(state.params.query) }
     }
 
     private fun calculateColors(colorSelected: PhotoColor?): List<ColorFilterItem> =
@@ -81,9 +119,5 @@ class SearchViewModel @ViewModelInject constructor(
                     colorSelected?.value == color
                 )
             }
-
-    companion object {
-        private const val PER_PAGE = 20
-    }
 
 }

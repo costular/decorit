@@ -3,8 +3,11 @@
 
     <string name="nav_photos">Photos</string>
     <string name="nav_search">Search</string>
-    <string name="nav_favorites">Favorites</string>
-    <string name="nav_settings">Settings</string>
+    <string name="nav_more">More</string>
+
+    <string name="something_went_wrong">Sorry! Something wen\'t wrong :(</string>
+    <string name="wallpaper_set_as">Set as</string>
+    <string name="photo_downloaded_successfully">Photo downloaded successfully!</string>
 
     <!-- Search -->
     <string name="search_hint">Search photos…</string>
@@ -15,4 +18,23 @@
     <string name="search_filter_orientation_any">Any</string>
     <string name="search_filter_show_results_button">Show results</string>
     <string name="search_filter_color_header">Color</string>
+
+    <string name="cancel">Cancel</string>
+
+    <!-- More -->
+    <string name="more_menu_github">GitHub</string>
+    <string name="more_menu_settings">Settings</string>
+    <string name="more_app_about_description">Open Source Android app to explore, download and set as wallpaper copyright-free photos from different sources like Unsplash, Pexels or Pixabay</string>
+
+    <!-- Preferences -->
+    <string name="quality_low">Low</string>
+    <string name="quality_medium">Medium</string>
+    <string name="quality_high">High</string>
+    <string name="quality_full">Full</string>
+
+    <string name="preferences_general_title">General</string>
+    <string name="preferences_quality_title">Quality</string>
+    <string name="preferences_quality_view">View Quality</string>
+    <string name="preferences_quality_download">Download Quality</string>
+
 </resources>
