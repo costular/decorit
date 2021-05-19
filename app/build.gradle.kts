@@ -28,19 +28,10 @@ android {
         }
     }
 
-    signingConfigs {
-        create("release") {
-            storeFile = rootProject.file("release.keystore")
-            storePassword = System.getenv("ANDROID_KEYSTORE_PASSPHRASE")
-            keyAlias = System.getenv("ANDROID_KEYSTORE_ALIAS")
-            keyPassword = System.getenv("ANDROID_KEYSTORE_PASSPHRASE")
-        }
-    }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
             buildConfigField(
                 "String",
                 "UNSPLASH_ACCESS_KEY",
