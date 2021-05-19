@@ -1,15 +1,16 @@
 package com.costular.decorit.presentation.more
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.outlined.Settings
@@ -19,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -74,13 +76,22 @@ fun MoreScreen() {
 @Composable
 private fun AboutApp(modifier: Modifier = Modifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_devices),
-            contentDescription = "icon",
-            Modifier
-                .width(60.dp)
-                .height(60.dp)
-        )
+        Surface(
+            shape = CircleShape,
+            elevation = 8.dp,
+            modifier = Modifier
+                .width(80.dp)
+                .height(80.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "icon",
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(60.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.h6)
         Text(text = stringResource(id = R.string.more_app_about_description))
