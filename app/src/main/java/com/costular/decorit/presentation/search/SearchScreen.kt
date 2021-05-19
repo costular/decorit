@@ -147,6 +147,7 @@ fun SearchTextField(
 ) {
     OutlinedTextField(
         value = value,
+        maxLines = 1,
         onValueChange = onValueChange,
         trailingIcon = {
             AnimatedVisibility(
