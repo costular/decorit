@@ -9,15 +9,15 @@ import com.costular.decorit.core.net.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module
 class NetModule {
     
@@ -55,5 +55,9 @@ class NetModule {
             .baseUrl("https://api.unsplash.com/")
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().build()
 
 }

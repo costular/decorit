@@ -2,7 +2,17 @@
 
     <style name="Theme.Decorit" parent="Base.Theme.Decorit">
         <item name="colorPrimary">@color/teal_200</item>
+        <item name="colorFilterYellow">@color/yellow_200</item>
+        <item name="colorFilterOrange">@color/orange_200</item>
+        <item name="colorFilterRed">@color/red_200</item>
+        <item name="colorFilterPurple">@color/purple_200</item>
+        <item name="colorFilterMagenta">@color/magenta_200</item>
+        <item name="colorFilterGreen">@color/green_200</item>
+        <item name="colorFilterTeal">@color/teal_200</item>
+        <item name="colorFilterBlue">@color/blue_200</item>
         <item name="colorOnPrimary">#000000</item>
+
+        <item name="colorDivider">@color/darkDivider</item>
     </style>
 
 </resources>

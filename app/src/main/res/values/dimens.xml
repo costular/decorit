@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="keyline_horizontal">24dp</dimen>
-    <dimen name="space_between_photos">16dp</dimen>
+    <dimen name="keyline_vertical_small">8dp</dimen>
+    <dimen name="keyline_vertical">16dp</dimen>
+    <dimen name="keyline_vertical_extra">24dp</dimen>
+
+    <dimen name="keyline_horizontal">16dp</dimen>
+    <dimen name="search_top_space">84dp</dimen>
+    <dimen name="space_between_photos">12dp</dimen>
+
+    <dimen name="search_layout_height">48dp</dimen>
+    <dimen name="search_icon_56">56dp</dimen>
 </resources>

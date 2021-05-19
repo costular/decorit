@@ -42,15 +42,6 @@ abstract class ResultInteractor<in P, R> {
     protected abstract suspend fun doWork(params: P): R
 }
 
-/*
-abstract class PagingInteractor<P : PagingInteractor.Parameters<T>, T> : SubjectInteractor<P, PagedList<T>>() {
-    interface Parameters<T> {
-        val pagingConfig: PagedList.Config
-        val boundaryCallback: PagedList.BoundaryCallback<T>?
-    }
-}
-*/
-
 @ExperimentalCoroutinesApi
 abstract class SuspendingWorkInteractor<P : Any, T> : SubjectInteractor<P, T>() {
     override fun createObservable(params: P): Flow<T> = flow {

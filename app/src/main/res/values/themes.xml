@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
 
-    <style name="Platform.Theme.Decorit" parent="Theme.MaterialComponents.DayNight.NoActionBar"></style>
+    <style name="Platform.Theme.Decorit" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 
     <style name="Base.Theme.Decorit" parent="Platform.Theme.Decorit">
         <item name="bottomNavigationStyle">@style/Widget.BottomNavigation</item>
@@ -9,7 +9,17 @@
 
     <style name="Theme.Decorit" parent="Base.Theme.Decorit">
         <item name="colorPrimary">@color/teal_500</item>
-        <item name="colorOnPrimary">#000000</item>
+        <item name="colorFilterYellow">@color/yellow_500</item>
+        <item name="colorFilterOrange">@color/orange_500</item>
+        <item name="colorFilterRed">@color/red_500</item>
+        <item name="colorFilterPurple">@color/purple_500</item>
+        <item name="colorFilterMagenta">@color/magenta_500</item>
+        <item name="colorFilterGreen">@color/green_500</item>
+        <item name="colorFilterTeal">@color/teal_500</item>
+        <item name="colorFilterBlue">@color/blue_500</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <item name="colorDivider">@color/lightDivider</item>
     </style>
 
     <style name="Theme.Decorit.Immerse" parent="Theme.Decorit">

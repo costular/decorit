@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.costular.decorit">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".presentation.DecoritApp"
         android:allowBackup="true"
+        android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Decorit"
-        android:name=".presentation.DecoritApp">
+        android:theme="@style/Theme.Decorit">
 
-        <activity android:name=".presentation.DecoritActivity"
-            android:theme="@style/Theme.Decorit.Immerse">
+        <activity
+            android:name=".presentation.DecoritActivity"
+            android:theme="@style/Theme.Decorit">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +26,13 @@
             </intent-filter>
 
         </activity>
+
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove" />
+
+        <activity android:name=".presentation.settings.SettingsActivity" />
 
     </application>
 
