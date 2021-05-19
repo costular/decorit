@@ -52,6 +52,7 @@ class PhotosViewModel @Inject constructor(
                 SearchParams()
             )
         )
+            .flowOn(dispatcher.io)
             .catch { Timber.e(it) }
             .onStart {
                 setState { copy(loadingMore = true) }

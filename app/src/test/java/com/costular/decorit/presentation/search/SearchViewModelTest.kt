@@ -1,36 +1,45 @@
 package com.costular.decorit.presentation.search
 
-/*
 import android.graphics.Color
+import app.cash.turbine.test
+import com.costular.decorit.core.TestDispatcherProvider
+import com.costular.decorit.core.net.DispatcherProvider
 import com.costular.decorit.data.SourceConstants
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
+import com.costular.decorit.domain.interactor.GetViewPhotoQualityInteractor
 import com.costular.decorit.domain.model.*
-import com.costular.decorit.presentation.ReduxViewModelTest
-import com.costular.decorit.presentation.testBlocking
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import io.uniflow.android.test.TestViewObserver
-import io.uniflow.android.test.createTestObserver
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.ExperimentalTime
 
-class SearchViewModelTest : ReduxViewModelTest() {
+@ExperimentalTime
+class SearchViewModelTest {
 
     private lateinit var viewModel: SearchViewModel
-    private lateinit var view: TestViewObserver
 
+    private val testCoroutineDispatcher = TestCoroutineDispatcher()
+    private val testDispatcherProvider: DispatcherProvider =
+        TestDispatcherProvider(testCoroutineDispatcher)
     private val getPhotosInteractor: GetPhotosInteractor = mockk(relaxed = true)
+    private val getViewPhotoQualityInteractor: GetViewPhotoQualityInteractor = mockk(relaxed = true)
 
     @Before
     fun setUp() {
-        viewModel = SearchViewModel(dispatcherProvider, getPhotosInteractor)
-        view = viewModel.createTestObserver()
+        viewModel = SearchViewModel(
+            testDispatcherProvider,
+            getPhotosInteractor,
+            getViewPhotoQualityInteractor
+        )
     }
 
     @Test
-    fun `Test get photos`() = testBlocking {
+    fun `Test get photos`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val photos = listOf(
             Photo(
@@ -57,12 +66,15 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.search()
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.items).isEqualTo(photos)
+        viewModel.state.test {
+            val state = expectItem()
+            Truth.assertThat(state.items).isEqualTo(photos)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test get photos next page`() = testBlocking {
+    fun `Test get photos next page`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val photos = listOf(
             Photo(
@@ -126,12 +138,14 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.search(loadNext = true)
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.items).isEqualTo(photos + secondPagePhotos)
+        viewModel.state.test {
+            Truth.assertThat(expectItem().items).isEqualTo(photos + secondPagePhotos)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test search and then clear`() = testBlocking {
+    fun `Test search and then clear`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val photos = listOf(
             Photo(
@@ -195,12 +209,14 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.search()
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.items).isEqualTo(secondPagePhotos)
+        viewModel.state.test {
+            Truth.assertThat(expectItem().items).isEqualTo(secondPagePhotos)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test select orientation`() = testBlocking {
+    fun `Test select orientation`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val orientation = PhotoOrientation.VERTICAL
 
@@ -208,12 +224,15 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.selectOrientation(orientation)
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.params.orientation).isEqualTo(orientation)
+        viewModel.state.test {
+            val state = expectItem()
+            Truth.assertThat(state.params.orientation).isEqualTo(orientation)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test select color`() = testBlocking {
+    fun `Test select color`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val color = PhotoColor(Color.WHITE, ColorValue.WHITE)
 
@@ -221,12 +240,14 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.selectColor(color)
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.params.color).isEqualTo(color)
+        viewModel.state.test {
+            Truth.assertThat(expectItem().params.color).isEqualTo(color)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test select color updates color list`() = testBlocking {
+    fun `Test select color updates color list`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val color = PhotoColor(Color.WHITE, ColorValue.WHITE)
 
@@ -234,14 +255,17 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.selectColor(color)
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.params.color).isEqualTo(color)
-        Truth.assertThat(lastState.filterColors.find { it.color == color.value }?.isSelected)
-            .isTrue()
+        viewModel.state.test {
+            val state = expectItem()
+            Truth.assertThat(state.params.color).isEqualTo(color)
+            Truth.assertThat(state.filterColors.find { it.color == color.value }?.isSelected)
+                .isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test show filters when params are empty`() = testBlocking {
+    fun `Test show filters when params are empty`() = testCoroutineDispatcher.runBlockingTest {
         // Given
 
 
@@ -249,12 +273,15 @@ class SearchViewModelTest : ReduxViewModelTest() {
 
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.showFilters).isFalse()
+        viewModel.state.test {
+            val state = expectItem()
+            Truth.assertThat(state.showFilters).isFalse()
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test show filters when params are non-empty`() = testBlocking {
+    fun `Test show filters when params are non-empty`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val photos = listOf(
             Photo(
@@ -280,12 +307,15 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.search(query = "whatever")
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.showFilters).isTrue()
+        viewModel.state.test {
+            val state = expectItem()
+            Truth.assertThat(state.showFilters).isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun `Test clear query should reset filters`() = testBlocking {
+    fun `Test clear query should reset filters`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val photos = listOf(
             Photo(
@@ -314,10 +344,13 @@ class SearchViewModelTest : ReduxViewModelTest() {
         viewModel.search(query = "")
 
         // Then
-        val lastState = view.lastStateOrNull as SearchState
-        Truth.assertThat(lastState.params.areEmpty()).isTrue()
-        Truth.assertThat(lastState.showFilters).isFalse()
+        viewModel.state.test {
+            val state = expectItem()
+            Truth.assertThat(state.params.areEmpty()).isTrue()
+            Truth.assertThat(state.showFilters).isFalse()
+            cancelAndIgnoreRemainingEvents()
+        }
+
     }
 
 }
- */

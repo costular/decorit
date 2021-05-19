@@ -56,7 +56,7 @@ class UnsplashPhotoDataSourceTest {
         )
         val expected = listOf(
             Photo(
-                "1",
+                "unsplash-1",
                 1080,
                 1080,
                 UNSPLASH,
@@ -117,7 +117,7 @@ class UnsplashPhotoDataSourceTest {
         )
         val expected = listOf(
             Photo(
-                "1",
+                "unsplash-1",
                 1080,
                 1080,
                 UNSPLASH,

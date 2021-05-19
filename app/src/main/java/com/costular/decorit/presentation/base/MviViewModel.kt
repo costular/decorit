@@ -3,6 +3,7 @@ package com.costular.decorit.presentation.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -11,10 +12,10 @@ import kotlin.reflect.KProperty1
 
 abstract class MviViewModel<S> constructor(initialState: S) : ViewModel() {
 
-    private val _uiEvents = MutableSharedFlow<UiEvent>(extraBufferCapacity = 100)
+    private val _uiEvents = Channel<UiEvent>(capacity = 100)
 
     val uiEvents: Flow<UiEvent>
-        get() = _uiEvents.asSharedFlow()
+        get() = _uiEvents.receiveAsFlow()
 
     private val _state = MutableStateFlow(initialState)
     private val stateMutex = Mutex()
@@ -67,7 +68,7 @@ abstract class MviViewModel<S> constructor(initialState: S) : ViewModel() {
     }
 
     protected fun sendEvent(uiEvent: UiEvent) = viewModelScope.launch {
-        _uiEvents.emit(uiEvent)
+        _uiEvents.send(uiEvent)
     }
 
 }

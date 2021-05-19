@@ -1,96 +1,89 @@
 package com.costular.decorit.presentation.photos
 
-/*
-import com.costular.decorit.data.SourceConstants
+import app.cash.turbine.test
+import com.costular.decorit.core.TestDispatcherProvider
+import com.costular.decorit.core.net.DispatcherProvider
 import com.costular.decorit.domain.interactor.GetPhotosInteractor
+import com.costular.decorit.domain.interactor.GetViewPhotoQualityInteractor
 import com.costular.decorit.domain.model.Photo
+import com.costular.decorit.domain.model.PhotoQuality
 import com.costular.decorit.domain.model.Photographer
-import com.costular.decorit.presentation.ReduxViewModelTest
-import com.costular.decorit.presentation.testBlocking
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import io.uniflow.android.test.TestViewObserver
-import io.uniflow.android.test.createTestObserver
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.ExperimentalTime
 
-class PhotosViewModelTest : ReduxViewModelTest() {
+@ExperimentalTime
+class PhotosViewModelTest {
 
-    private lateinit var photosViewModel: PhotosViewModel
-    lateinit var view: TestViewObserver
+    private val testCoroutineDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
+    private val testDispatcherProvider: DispatcherProvider =
+        TestDispatcherProvider(testCoroutineDispatcher)
 
     private val getPhotosInteractor: GetPhotosInteractor = mockk(relaxed = true)
+    private val getViewPhotoQualityInteractor: GetViewPhotoQualityInteractor = mockk(relaxed = true)
+
+    lateinit var photosViewModel: PhotosViewModel
 
     @Before
     fun setUp() {
-        photosViewModel = PhotosViewModel(dispatcherProvider, getPhotosInteractor)
-        view = photosViewModel.createTestObserver()
+        Dispatchers.setMain(testCoroutineDispatcher)
+        every { getViewPhotoQualityInteractor.observe() } returns flowOf(PhotoQuality.Medium)
+
+        photosViewModel = PhotosViewModel(
+            testDispatcherProvider,
+            getPhotosInteractor,
+            getViewPhotoQualityInteractor
+        )
+    }
+
+    @Before
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `Test load`() = testBlocking {
+    fun `Test load`() = testCoroutineDispatcher.runBlockingTest {
         // Given
         val photos = listOf(
             Photo(
-                "1",
+                "whatever",
                 1080,
                 1080,
-                SourceConstants.UNSPLASH,
+                "pexels",
                 Photographer(
                     "1",
-                    "john",
-                    "avatar"
+                    "John Doe",
+                    "avatar.jpg"
                 ),
                 false,
-                "original",
-                "full",
-                "regular",
-                "small"
+                "original.jpg",
+                "large.jpg",
+                "medium.jpg",
+                "small.jpg"
             )
         )
-
-        every { getPhotosInteractor(any()) } returns flowOf(photos)
+        every { getViewPhotoQualityInteractor.observe() } returns flowOf(PhotoQuality.Medium)
 
         // When
         photosViewModel.load()
 
         // Then
-        Truth.assertThat(view.lastStateOrNull).isEqualTo(
-            PhotosState(
-                2,
-                photos
-            )
-        )
-    }
-
-    @Test
-    fun `Test open photo`() = testBlocking {
-        // Given
-        val photo = Photo(
-            "1",
-            1080,
-            1080,
-            SourceConstants.UNSPLASH,
-            Photographer(
-                "1",
-                "john",
-                "avatar"
-            ),
-            false,
-            "original",
-            "full",
-            "regular",
-            "small"
-        )
-
-        // When
-        photosViewModel.openPhoto(photo)
-
-        // Then
-        Truth.assertThat(PhotosEvents.OpenPhoto(photo))
+        photosViewModel.state.test {
+            val state = expectItem()
+            Truth.assertThat(state.photos).isEqualTo(photos)
+            Truth.assertThat(state.page).isEqualTo(1)
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
 }
- */
