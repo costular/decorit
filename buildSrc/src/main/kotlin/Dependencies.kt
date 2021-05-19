@@ -8,7 +8,7 @@ object Versions {
     val material = "1.4.0-alpha01"
     val appCompat = "1.3.0-beta01"
     val constraintLayout = "2.0.4"
-    val lifecycle = "2.2.0"
+    val lifecycle = "2.3.1"
     val fragment = "1.3.3"
     val navigation = "2.3.0-alpha06"
     val mockk = "1.10.0"
