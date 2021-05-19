@@ -69,7 +69,9 @@ class DecoritActivity : AppCompatActivity() {
                         )
                     }
                     composable(Screen.Search.route) {
-                        SearchScreen()
+                        SearchScreen(onPhotoClick = { photo ->
+                            navController.navigate("photos/${photo.id}")
+                        })
                     }
                     composable(Screen.More.route) {
                         MoreScreen()

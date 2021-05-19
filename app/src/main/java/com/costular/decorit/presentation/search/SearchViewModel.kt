@@ -40,6 +40,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             queryQueue
                 .consumeAsFlow()
+                .flowOn(dispatcher.computation)
                 .distinctUntilChanged()
                 .debounce(300L)
                 .collect { query ->

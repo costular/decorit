@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
@@ -23,12 +24,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import com.costular.decorit.R
+import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.presentation.components.PhotoGrid
+import com.costular.decorit.presentation.photos.PhotosEvents
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SearchScreen() {
+fun SearchScreen(onPhotoClick: (photo: Photo) -> Unit) {
     val viewModel: SearchViewModel = hiltNavGraphViewModel()
     val state by viewModel.state.collectAsState()
 
@@ -37,6 +41,14 @@ fun SearchScreen() {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
+
+    LaunchedEffect(viewModel) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                is SearchEvents.OpenPhoto -> onPhotoClick.invoke(event.photo)
+            }
+        }
+    }
 
     BottomSheetScaffold(
         sheetContent = { FilterDialog() },
@@ -59,7 +71,7 @@ fun SearchScreen() {
                 loadNextPage = { viewModel.search(loadNext = true) }
             )
 
-            var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
+            var searchQuery by rememberSaveable { mutableStateOf("") }
 
             Box(
                 modifier = Modifier
@@ -79,7 +91,7 @@ fun SearchScreen() {
                         hint = stringResource(id = R.string.search_hint),
                         onValueChange = { newQuery ->
                             searchQuery = newQuery
-                            viewModel.enqueueQuery(newQuery.text)
+                            viewModel.enqueueQuery(newQuery)
                         }
                     )
                 }
@@ -126,8 +138,8 @@ private fun FilterDialog(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SearchTextField(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -138,12 +150,12 @@ fun SearchTextField(
         onValueChange = onValueChange,
         trailingIcon = {
             AnimatedVisibility(
-                visible = value.text.isNotEmpty(),
+                visible = value.isNotEmpty(),
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 IconButton(
-                    onClick = { onValueChange(TextFieldValue()) },
+                    onClick = { onValueChange("") },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Clear,
