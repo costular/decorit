@@ -76,10 +76,6 @@ android {
 
 kapt {
     correctErrorTypes = true
-    /*arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-    }*/
 }
 
 dependencies {
@@ -97,8 +93,6 @@ dependencies {
     kapt(Deps.hiltCompiler)
     kapt(Deps.hiltJetpackCompiler)
     implementation(Deps.hiltJetpackViewModel)
-    implementation(Deps.glide)
-    kapt(Deps.glideCompiler)
     implementation(Deps.appInitializer)
     implementation(Deps.preferences)
     implementation(Deps.preferencesDataStore)
@@ -106,15 +100,9 @@ dependencies {
     implementation(Deps.moshi)
     implementation(Deps.moshiRetrofit)
     kapt(Deps.moshiCompiler)
-    implementation(Deps.lifecycleRuntime)
-    implementation(Deps.lifecycleLiveData)
-    implementation(Deps.lifecycleCommon)
     implementation(Deps.hiltWork)
     debugImplementation(Deps.chuckerDebug)
     releaseImplementation(Deps.chuckerRelease)
-    implementation(Deps.flick)
-    implementation(Deps.gestureViews)
-    implementation(Deps.flowBindingAndroid)
     implementation(Deps.composeActivity)
     implementation(Deps.composeFoundation)
     implementation(Deps.composeRuntime)
