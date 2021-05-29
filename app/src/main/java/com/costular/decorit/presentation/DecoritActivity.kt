@@ -48,7 +48,7 @@ class DecoritActivity : AppCompatActivity() {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val isHomeDestination by remember(navBackStackEntry) {
             derivedStateOf {
-                navBackStackEntry?.arguments?.getString(KEY_ROUTE) in routeDestinations
+                navBackStackEntry?.destination?.route in routeDestinations
             }
         }
 
@@ -96,7 +96,7 @@ class DecoritActivity : AppCompatActivity() {
             contentColor = MaterialTheme.colors.onSurface
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+            val currentRoute = navBackStackEntry?.destination?.route
             routes.forEach { screen ->
                 BottomNavigationItem(
                     selectedContentColor = MaterialTheme.colors.primary,
@@ -109,10 +109,13 @@ class DecoritActivity : AppCompatActivity() {
                             // Pop up to the start destination of the graph to
                             // avoid building up a large stack of destinations
                             // on the back stack as users select items
-                            popUpTo = navController.graph.startDestination
+                            popUpTo(navController.graph.startDestinationRoute!!) {
+                                saveState = true
+                            }
                             // Avoid multiple copies of the same destination when
                             // reselecting the same item
                             launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )

@@ -7,7 +7,6 @@ plugins {
     kotlin("kapt")
     id(GradlePlugins.kotlinParcelize)
     id(GradlePlugins.hilt)
-    id(GradlePlugins.safeArgs)
 }
 
 android {
@@ -58,7 +57,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
         compose = true
     }
 
@@ -67,10 +65,9 @@ android {
     }
 
     packagingOptions {
-        // Multiple dependency bring these files in. Exclude them to enable
-        // our test APK to build (has no effect on our AARs)
-        excludes += "/META-INF/AL2.0"
-        excludes += "/META-INF/LGPL2.1"
+        resources.excludes.add("META-INF/licenses/**")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
     }
 }
 
