@@ -37,4 +37,10 @@
     <string name="preferences_quality_view">View Quality</string>
     <string name="preferences_quality_download">Download Quality</string>
 
+    <string name="preferences_appearance_title">Appearance</string>
+    <string name="preferences_theme_title">Theme</string>
+    <string name="preferences_theme_light">Light</string>
+    <string name="preferences_theme_dark">Dark</string>
+    <string name="preferences_theme_system">System default</string>
+
 </resources>

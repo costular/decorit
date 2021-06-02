@@ -9,14 +9,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.presentation.components.PhotoGrid
 import kotlinx.coroutines.flow.collect
 
 @Composable
 fun PhotosScreen(onPhotoClick: (photo: Photo) -> Unit) {
-    val viewModel: PhotosViewModel = hiltNavGraphViewModel()
+    val viewModel: PhotosViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(viewModel) {
