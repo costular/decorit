@@ -22,7 +22,9 @@ import com.costular.decorit.util.rememberFlowWithLifecycle
 import androidx.compose.runtime.getValue
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    onGoBack: () -> Unit
+) {
     val viewModel: SettingsViewModel = hiltViewModel()
     val state by rememberFlowWithLifecycle(viewModel.state).collectAsState(initial = SettingsState())
     var showChooseThemeDialog by rememberSaveable { mutableStateOf(false) }
@@ -34,7 +36,8 @@ fun SettingsScreen() {
             state,
             onChooseTheme = { showChooseThemeDialog = true },
             onChooseViewQuality = { showViewQualityDialog = true },
-            onChooseDownloadQuality = { showDownloadQualityDialog = true }
+            onChooseDownloadQuality = { showDownloadQualityDialog = true },
+            onGoBack = onGoBack
         )
 
         if (showChooseThemeDialog) {
@@ -90,11 +93,12 @@ private fun SettingsContent(
     onChooseTheme: () -> Unit,
     onChooseViewQuality: () -> Unit,
     onChooseDownloadQuality: () -> Unit,
+    onGoBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         topBar = {
-            SettingsBar(modifier = Modifier.fillMaxWidth())
+            SettingsBar(onGoBack = onGoBack, modifier = Modifier.fillMaxWidth())
         },
         modifier = modifier.fillMaxSize()
     ) {
@@ -129,13 +133,16 @@ private fun SettingsContent(
 }
 
 @Composable
-private fun SettingsBar(modifier: Modifier = Modifier) {
+private fun SettingsBar(
+    onGoBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     TopAppBar(
         title = {
             Text(text = stringResource(R.string.more_menu_settings))
         },
         navigationIcon = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = onGoBack) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
             }
         },

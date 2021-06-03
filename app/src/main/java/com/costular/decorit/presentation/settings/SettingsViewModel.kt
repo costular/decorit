@@ -1,5 +1,6 @@
 package com.costular.decorit.presentation.settings
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.costular.decorit.core.net.DispatcherProvider
@@ -32,6 +33,9 @@ class SettingsViewModel @Inject constructor(
             .flowOn(dispatcher.io)
             .collect { status ->
                 when (status) {
+                    is InvokeSuccess -> {
+                        AppCompatDelegate.setDefaultNightMode(theme.themeAsNightMode())
+                    }
                     is InvokeError -> {
                         // TODO: 1/6/21 show error
                     }
@@ -102,6 +106,12 @@ class SettingsViewModel @Inject constructor(
                     }
                 }
             }
+    }
+
+    private fun Theme.themeAsNightMode(): Int = when (this) {
+        Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+        Theme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
     }
 
 }

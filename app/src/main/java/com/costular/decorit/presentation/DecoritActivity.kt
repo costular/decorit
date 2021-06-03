@@ -90,7 +90,7 @@ class DecoritActivity : AppCompatActivity() {
                         )
                     }
                     composable("settings") {
-                        SettingsScreen()
+                        SettingsScreen(onGoBack = { navController.popBackStack() })
                     }
                 }
             }
