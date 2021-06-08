@@ -3,6 +3,7 @@ package com.costular.decorit.presentation.photodetail
 import androidx.lifecycle.viewModelScope
 import com.costular.decorit.core.net.DispatcherProvider
 import com.costular.decorit.domain.Async
+import com.costular.decorit.domain.interactor.GetDownloadPhotoQualityInteractor
 import com.costular.decorit.domain.interactor.GetPhotoByIdInteractor
 import com.costular.decorit.presentation.base.MviViewModel
 import com.costular.decorit.workers.DownloadWorker
@@ -18,8 +19,21 @@ import javax.inject.Inject
 class PhotoDetailViewModel @Inject constructor(
     private val dispatcher: DispatcherProvider,
     private val getPhotoByIdInteractor: GetPhotoByIdInteractor,
+    private val getDownloadPhotoQualityInteractor: GetDownloadPhotoQualityInteractor,
     private val workerRunner: WorkerRunner
 ) : MviViewModel<PhotoDetailState>(PhotoDetailState()) {
+
+    init {
+        viewModelScope.launch {
+            getDownloadPhotoQualityInteractor(Unit)
+            getDownloadPhotoQualityInteractor.observe()
+                .flowOn(dispatcher.io)
+                .catch { Timber.e(it) }
+                .collect { quality ->
+                    setState { copy(downloadQuality = quality) }
+                }
+        }
+    }
 
     fun load(photoId: String) = viewModelScope.launch(dispatcher.main) {
         setState { copy(photoId = photoId) }
@@ -77,7 +91,10 @@ class PhotoDetailViewModel @Inject constructor(
         val photo = state.photo
         return if (photo is Async.Success) {
             val data = photo()
-            workerRunner.enqueueDownloadWorker(data.original, data.photographer.name)
+            workerRunner.enqueueDownloadWorker(
+                data.photoUrlFromQuality(state.downloadQuality),
+                data.photographer.name
+            )
         } else {
             null
         }

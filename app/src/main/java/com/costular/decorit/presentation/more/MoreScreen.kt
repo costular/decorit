@@ -1,7 +1,6 @@
 package com.costular.decorit.presentation.more
 
 import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Box
@@ -20,8 +19,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,14 +28,15 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.costular.decorit.R
-import com.costular.decorit.presentation.settings.SettingsActivity
 import kotlinx.coroutines.flow.collect
 
 @Composable
-fun MoreScreen() {
-    val viewModel: MoreViewModel = hiltNavGraphViewModel()
+fun MoreScreen(
+    onOpenSettings: () -> Unit
+) {
+    val viewModel: MoreViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     val listState = rememberLazyListState()
     val context = LocalContext.current
@@ -51,8 +49,7 @@ fun MoreScreen() {
                     context.startActivity(webIntent)
                 }
                 is MoreEvents.OpenSettings -> {
-                    val intent = Intent(context, SettingsActivity::class.java)
-                    context.startActivity(intent)
+                    onOpenSettings()
                 }
             }
         }
@@ -179,5 +176,5 @@ private fun MoreListItemComposable() {
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
 fun MoreScreenPreview() {
-    MoreScreen()
+    MoreScreen(onOpenSettings = {})
 }

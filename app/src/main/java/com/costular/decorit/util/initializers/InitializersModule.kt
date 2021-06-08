@@ -10,4 +10,8 @@ import dagger.multibindings.IntoSet
 @Module
 abstract class InitializersModule {
 
+    @Binds
+    @IntoSet
+    abstract fun provideThemeInitializer(bind: ThemeInitializer): ThemeInitializer
+
 }

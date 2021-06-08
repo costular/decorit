@@ -20,6 +20,7 @@ import com.costular.decorit.presentation.navigation.Screen
 import com.costular.decorit.presentation.photodetail.PhotoDetailScreen
 import com.costular.decorit.presentation.photos.PhotosScreen
 import com.costular.decorit.presentation.search.SearchScreen
+import com.costular.decorit.presentation.settings.SettingsScreen
 import com.costular.decorit.presentation.ui.DecoritTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -74,7 +75,11 @@ class DecoritActivity : AppCompatActivity() {
                         })
                     }
                     composable(Screen.More.route) {
-                        MoreScreen()
+                        MoreScreen(
+                            onOpenSettings = {
+                                navController.navigate("settings")
+                            }
+                        )
                     }
                     composable("photos/{photoId}") { backStackEntry ->
                         PhotoDetailScreen(
@@ -83,6 +88,9 @@ class DecoritActivity : AppCompatActivity() {
                                 navController.popBackStack()
                             }
                         )
+                    }
+                    composable("settings") {
+                        SettingsScreen(onGoBack = { navController.popBackStack() })
                     }
                 }
             }

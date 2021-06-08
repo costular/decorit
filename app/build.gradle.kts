@@ -7,6 +7,7 @@ plugins {
     kotlin("kapt")
     id(GradlePlugins.kotlinParcelize)
     id(GradlePlugins.hilt)
+    id("com.github.ben-manes.versions") version "0.39.0"
 }
 
 android {
@@ -83,6 +84,7 @@ dependencies {
     implementation(Deps.material)
     implementation(Deps.core)
     implementation(Deps.appCompat)
+    implementation(Deps.lifecycleRuntimeKtx)
     implementation(Deps.viewModel)
     implementation(Deps.coroutines)
     implementation(Deps.kotlin)

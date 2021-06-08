@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
+import com.costular.decorit.domain.repository.SettingsRepository
 import com.costular.decorit.util.FILE_PROVIDER_AUTHORITY
 import com.costular.decorit.util.LEGACY_ABSOLUTE_PATH
 import dagger.assisted.Assisted
