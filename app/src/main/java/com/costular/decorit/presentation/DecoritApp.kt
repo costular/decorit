@@ -13,7 +13,9 @@ import javax.inject.Inject
 @HiltAndroidApp
 class DecoritApp : Application(), Configuration.Provider {
 
-    // @Inject lateinit var initializers: AppInitializers
+    @Inject
+    lateinit var initializers: AppInitializers
+
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
@@ -23,7 +25,7 @@ class DecoritApp : Application(), Configuration.Provider {
     }
 
     private fun init() {
-        //initializers.init(this)
+        initializers.init(this)
 
         // Debug logger
         if (BuildConfig.DEBUG) {

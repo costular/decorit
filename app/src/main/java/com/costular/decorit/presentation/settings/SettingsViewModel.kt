@@ -7,6 +7,7 @@ import com.costular.decorit.core.net.DispatcherProvider
 import com.costular.decorit.domain.interactor.*
 import com.costular.decorit.domain.model.PhotoQuality
 import com.costular.decorit.domain.model.Theme
+import com.costular.decorit.domain.model.themeAsNightMode
 import com.costular.decorit.presentation.base.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
@@ -106,12 +107,6 @@ class SettingsViewModel @Inject constructor(
                     }
                 }
             }
-    }
-
-    private fun Theme.themeAsNightMode(): Int = when (this) {
-        Theme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        Theme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-        Theme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
     }
 
 }
