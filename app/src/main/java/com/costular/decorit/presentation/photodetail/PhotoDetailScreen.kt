@@ -24,7 +24,13 @@ import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.Photographer
 import kotlinx.coroutines.flow.collect
 import android.content.Intent
+import android.text.style.UnderlineSpan
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.coil.rememberCoilPainter
@@ -120,6 +126,7 @@ private fun CloseIcon(onGoBack: () -> Unit) {
 private fun ActionsBar(
     photographer: Photographer,
     source: String,
+    sourceLink: String,
     isDownloading: Boolean,
     isSettingAsWallpaper: Boolean,
     onDownload: () -> Unit,
@@ -131,6 +138,7 @@ private fun ActionsBar(
         PhotographerNameAndSource(
             name = photographer.name,
             source = source,
+            link = sourceLink,
             modifier = Modifier
                 .padding(start = 16.dp, bottom = 16.dp)
                 .weight(1f)
@@ -178,11 +186,37 @@ private fun PhotographerAvatar(
 private fun PhotographerNameAndSource(
     name: String,
     source: String,
+    link: String,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Column(modifier) {
+        val providedBy = stringResource(R.string.provided_by)
+        val annotatedString = buildAnnotatedString {
+            append("$providedBy ")
+            pushStringAnnotation(
+                tag = "URL",
+                annotation = link
+            )
+            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                append(source)
+            }
+            pop()
+        }
+
         Text(text = name)
-        Text(text = source)
+        ClickableText(
+            text = annotatedString,
+            onClick = { offset ->
+                annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
+                    .firstOrNull()
+                    ?.let { annotation ->
+                        val intent = Intent(Intent.ACTION_VIEW, annotation.item.toUri())
+                        context.startActivity(intent)
+                    }
+            }
+        )
     }
 }
 
@@ -255,7 +289,8 @@ private fun Success(
             onDownload = onDownload,
             onSetAsWallpaper = onSetAsWallpaper,
             photographer = photo.photographer,
-            source = photo.sourceId,
+            source = photo.source.name,
+            sourceLink = photo.source.link,
             isDownloading = isDownloading,
             isSettingAsWallpaper = isSettingAsWallpaper
         )
