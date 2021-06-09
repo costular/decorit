@@ -7,13 +7,17 @@ import com.costular.decorit.domain.repository.SourcesRepository
 
 class DefaultSourcesRepository : SourcesRepository {
 
-    private val sources: List<Source> = listOf(
-        Source(
+    companion object {
+        val Unsplash = Source(
             UNSPLASH,
             "Unsplash",
             "https://unsplash.com/",
             R.drawable.ic_unsplash
         )
+    }
+
+    private val sources: List<Source> = listOf(
+        Unsplash
         // TODO add sources
     )
 

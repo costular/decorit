@@ -1,6 +1,8 @@
 package com.costular.decorit.data.unsplash.model
 
 import com.costular.decorit.data.SourceConstants.UNSPLASH
+import com.costular.decorit.data.repository.photos.DefaultSourcesRepository
+import com.costular.decorit.di.Unsplash
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.Photographer
 
@@ -16,7 +18,7 @@ fun UnsplashPhotoDTO.toPhoto(): Photo =
         "${UNSPLASH}-$id",
         this.width,
         this.height,
-        UNSPLASH,
+        DefaultSourcesRepository.Unsplash,
         this.userDTO.toPhotographer(),
         false,
         this.urlsDTO.original,

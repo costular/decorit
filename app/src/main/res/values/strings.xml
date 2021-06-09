@@ -8,6 +8,7 @@
     <string name="something_went_wrong">Sorry! Something wen\'t wrong :(</string>
     <string name="wallpaper_set_as">Set as</string>
     <string name="photo_downloaded_successfully">Photo downloaded successfully!</string>
+    <string name="provided_by">On</string>
 
     <!-- Search -->
     <string name="search_hint">Search photos…</string>
