@@ -12,11 +12,14 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
+import com.costular.decorit.data.SourceConstants
+import com.costular.decorit.data.unsplash.UnsplashApi
 import com.costular.decorit.domain.repository.SettingsRepository
 import com.costular.decorit.util.FILE_PROVIDER_AUTHORITY
 import com.costular.decorit.util.LEGACY_ABSOLUTE_PATH
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.ResponseBody
@@ -30,6 +33,7 @@ import java.util.concurrent.CancellationException
 @HiltWorker
 class DownloadWorker @AssistedInject constructor(
     private val okHttpClient: OkHttpClient,
+    private val unsplashApi: UnsplashApi,
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters
 ) : CoroutineWorker(appContext, workerParams) {
@@ -41,15 +45,21 @@ class DownloadWorker @AssistedInject constructor(
 
         private const val KEY_INPUT_URL = "KEY_INPUT_URL"
         private const val KEY_OUTPUT_FILE_NAME = "KEY_OUTPUT_FILE_NAME"
+        private const val KEY_PHOTO_ID = "KEY_PHOT_ID"
+        private const val KEY_SOURCE_ID = "KEY_SOURCE_ID"
 
         fun enqueueDownload(
             context: Context,
             url: String,
-            fileName: String
+            fileName: String,
+            sourceId: String,
+            photoId: String
         ): UUID {
             val inputData = workDataOf(
                 KEY_INPUT_URL to url,
-                KEY_OUTPUT_FILE_NAME to fileName
+                KEY_OUTPUT_FILE_NAME to fileName,
+                KEY_SOURCE_ID to sourceId,
+                KEY_PHOTO_ID to photoId
             )
             val request = OneTimeWorkRequestBuilder<DownloadWorker>()
                 .setConstraints(
@@ -67,10 +77,10 @@ class DownloadWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val url = inputData.getString(KEY_INPUT_URL) ?: return Result.failure()
         val fileName = inputData.getString(KEY_OUTPUT_FILE_NAME) ?: return Result.failure()
+        val sourceId = inputData.getString(KEY_SOURCE_ID) ?: return Result.failure()
+        val photoId = inputData.getString(KEY_PHOTO_ID) ?: return Result.failure()
 
-        val notificationId = id.hashCode()
         val cancelIntent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
-        val notificationBuilder = getProgressNotificationBuilder(fileName, cancelIntent)
 
         val response = download(
             url,
@@ -83,9 +93,18 @@ class DownloadWorker @AssistedInject constructor(
         )
 
         return when (response) {
-            is DownloadResponse.Success -> Result.success(workDataOf(OutputUri to response.uri.toString()))
+            is DownloadResponse.Success -> {
+                if (sourceId == SourceConstants.UNSPLASH) {
+                    trackUnsplashDownload(photoId)
+                }
+                Result.success(workDataOf(OutputUri to response.uri.toString()))
+            }
             else -> Result.failure()
         }
+    }
+
+    private suspend fun trackUnsplashDownload(id: String) = runBlocking {
+        unsplashApi.downloadPhoto(id)
     }
 
     private suspend fun download(

@@ -18,6 +18,7 @@ data class Photo(
 ) : Parcelable {
 
     val resolution: String = "${width}x${height}"
+    val sourcedId: String = id.split("-").last()
 
     fun photoUrlFromQuality(photoQuality: PhotoQuality): String = when (photoQuality) {
         PhotoQuality.Low -> small

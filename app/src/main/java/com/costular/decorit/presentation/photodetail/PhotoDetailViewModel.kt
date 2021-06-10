@@ -93,7 +93,9 @@ class PhotoDetailViewModel @Inject constructor(
             val data = photo()
             workerRunner.enqueueDownloadWorker(
                 data.photoUrlFromQuality(state.downloadQuality),
-                data.photographer.name
+                data.photographer.name,
+                data.sourcedId,
+                data.source.id
             )
         } else {
             null

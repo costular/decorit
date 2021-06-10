@@ -27,4 +27,7 @@ interface UnsplashApi {
     @GET("photos/{id}")
     suspend fun getPhotoById(@Path("id") id: String): UnsplashPhotoDTO
 
+    @GET("photos/{id}/download")
+    suspend fun downloadPhoto(@Path("id") id: String)
+
 }
