@@ -10,7 +10,8 @@ fun UnsplashUserDTO.toPhotographer(): Photographer =
     Photographer(
         this.id,
         this.name,
-        this.profileImageDTO.medium
+        this.profileImageDTO.medium,
+        this.links.self
     )
 
 fun UnsplashPhotoDTO.toPhoto(): Photo =

@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 class Photographer(
     val id: String,
     val name: String,
-    val avatar: String?
+    val avatar: String?,
+    val link: String
 ) : Parcelable

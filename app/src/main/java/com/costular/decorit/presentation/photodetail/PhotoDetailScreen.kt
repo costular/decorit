@@ -1,5 +1,6 @@
 package com.costular.decorit.presentation.photodetail
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import android.content.Intent
 import android.text.style.UnderlineSpan
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
@@ -137,6 +139,7 @@ private fun ActionsBar(
         PhotographerAvatar(avatarUrl = photographer.avatar, modifier = Modifier.size(40.dp))
         PhotographerNameAndSource(
             name = photographer.name,
+            authorLink = photographer.link,
             source = source,
             link = sourceLink,
             modifier = Modifier
@@ -185,6 +188,7 @@ private fun PhotographerAvatar(
 @Composable
 private fun PhotographerNameAndSource(
     name: String,
+    authorLink: String,
     source: String,
     link: String,
     modifier: Modifier = Modifier
@@ -192,6 +196,23 @@ private fun PhotographerNameAndSource(
     val context = LocalContext.current
 
     Column(modifier) {
+        val authorAnnotated = buildAnnotatedString {
+            pushStringAnnotation(
+                tag = "URL",
+                annotation = authorLink
+            )
+            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                append(name)
+            }
+            pop()
+        }
+        ClickableText(
+            text = authorAnnotated,
+            onClick = { offset ->
+                handleClick(context, authorAnnotated, offset)
+            }
+        )
+
         val providedBy = stringResource(R.string.provided_by)
         val annotatedString = buildAnnotatedString {
             append("$providedBy ")
@@ -204,20 +225,22 @@ private fun PhotographerNameAndSource(
             }
             pop()
         }
-
-        Text(text = name)
         ClickableText(
             text = annotatedString,
             onClick = { offset ->
-                annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
-                    .firstOrNull()
-                    ?.let { annotation ->
-                        val intent = Intent(Intent.ACTION_VIEW, annotation.item.toUri())
-                        context.startActivity(intent)
-                    }
+                handleClick(context, annotatedString, offset)
             }
         )
     }
+}
+
+private fun handleClick(context: Context, annotatedString: AnnotatedString, offset: Int) {
+    annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
+        .firstOrNull()
+        ?.let { annotation ->
+            val intent = Intent(Intent.ACTION_VIEW, annotation.item.toUri())
+            context.startActivity(intent)
+        }
 }
 
 @Composable
