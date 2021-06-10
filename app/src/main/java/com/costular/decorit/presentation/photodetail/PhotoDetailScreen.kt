@@ -1,48 +1,46 @@
 package com.costular.decorit.presentation.photodetail
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import coil.transform.CircleCropTransformation
 import com.costular.decorit.R
 import com.costular.decorit.domain.Async
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.domain.model.Photographer
-import com.costular.decorit.presentation.photos.PhotosEvents
-import com.costular.decorit.presentation.search.SearchViewModel
-import com.costular.decorit.presentation.ui.DecoritTheme
-import com.google.accompanist.coil.CoilImage
 import kotlinx.coroutines.flow.collect
 import android.content.Intent
+import android.text.style.UnderlineSpan
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.coil.rememberCoilPainter
 import kotlinx.coroutines.launch
 
 @Composable
 fun PhotoDetailScreen(photoId: String, onGoBack: () -> Unit) {
-    val viewModel: PhotoDetailViewModel = hiltNavGraphViewModel()
+    val viewModel: PhotoDetailViewModel = hiltViewModel()
     val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -130,6 +128,7 @@ private fun CloseIcon(onGoBack: () -> Unit) {
 private fun ActionsBar(
     photographer: Photographer,
     source: String,
+    sourceLink: String,
     isDownloading: Boolean,
     isSettingAsWallpaper: Boolean,
     onDownload: () -> Unit,
@@ -140,7 +139,9 @@ private fun ActionsBar(
         PhotographerAvatar(avatarUrl = photographer.avatar, modifier = Modifier.size(40.dp))
         PhotographerNameAndSource(
             name = photographer.name,
+            authorLink = photographer.link,
             source = source,
+            link = sourceLink,
             modifier = Modifier
                 .padding(start = 16.dp, bottom = 16.dp)
                 .weight(1f)
@@ -187,13 +188,59 @@ private fun PhotographerAvatar(
 @Composable
 private fun PhotographerNameAndSource(
     name: String,
+    authorLink: String,
     source: String,
+    link: String,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Column(modifier) {
-        Text(text = name)
-        Text(text = source)
+        val authorAnnotated = buildAnnotatedString {
+            pushStringAnnotation(
+                tag = "URL",
+                annotation = authorLink
+            )
+            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                append(name)
+            }
+            pop()
+        }
+        ClickableText(
+            text = authorAnnotated,
+            onClick = { offset ->
+                handleClick(context, authorAnnotated, offset)
+            }
+        )
+
+        val providedBy = stringResource(R.string.provided_by)
+        val annotatedString = buildAnnotatedString {
+            append("$providedBy ")
+            pushStringAnnotation(
+                tag = "URL",
+                annotation = link
+            )
+            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                append(source)
+            }
+            pop()
+        }
+        ClickableText(
+            text = annotatedString,
+            onClick = { offset ->
+                handleClick(context, annotatedString, offset)
+            }
+        )
     }
+}
+
+private fun handleClick(context: Context, annotatedString: AnnotatedString, offset: Int) {
+    annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
+        .firstOrNull()
+        ?.let { annotation ->
+            val intent = Intent(Intent.ACTION_VIEW, annotation.item.toUri())
+            context.startActivity(intent)
+        }
 }
 
 @Composable
@@ -265,7 +312,8 @@ private fun Success(
             onDownload = onDownload,
             onSetAsWallpaper = onSetAsWallpaper,
             photographer = photo.photographer,
-            source = photo.sourceId,
+            source = photo.source.name,
+            sourceLink = photo.source.link,
             isDownloading = isDownloading,
             isSettingAsWallpaper = isSettingAsWallpaper
         )

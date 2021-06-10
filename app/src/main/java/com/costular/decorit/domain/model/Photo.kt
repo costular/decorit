@@ -8,7 +8,7 @@ data class Photo(
     val id: String,
     val width: Int,
     val height: Int,
-    val sourceId: String,
+    val source: Source,
     val photographer: Photographer,
     val isFavorite: Boolean,
     val original: String,
@@ -16,6 +16,9 @@ data class Photo(
     val medium: String,
     val small: String
 ) : Parcelable {
+
+    val resolution: String = "${width}x${height}"
+    val sourcedId: String = id.split("-").last()
 
     fun photoUrlFromQuality(photoQuality: PhotoQuality): String = when (photoQuality) {
         PhotoQuality.Low -> small

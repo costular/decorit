@@ -20,6 +20,7 @@ import com.costular.decorit.presentation.navigation.Screen
 import com.costular.decorit.presentation.photodetail.PhotoDetailScreen
 import com.costular.decorit.presentation.photos.PhotosScreen
 import com.costular.decorit.presentation.search.SearchScreen
+import com.costular.decorit.presentation.settings.SettingsScreen
 import com.costular.decorit.presentation.ui.DecoritTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,7 +49,7 @@ class DecoritActivity : AppCompatActivity() {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val isHomeDestination by remember(navBackStackEntry) {
             derivedStateOf {
-                navBackStackEntry?.arguments?.getString(KEY_ROUTE) in routeDestinations
+                navBackStackEntry?.destination?.route in routeDestinations
             }
         }
 
@@ -74,7 +75,11 @@ class DecoritActivity : AppCompatActivity() {
                         })
                     }
                     composable(Screen.More.route) {
-                        MoreScreen()
+                        MoreScreen(
+                            onOpenSettings = {
+                                navController.navigate("settings")
+                            }
+                        )
                     }
                     composable("photos/{photoId}") { backStackEntry ->
                         PhotoDetailScreen(
@@ -83,6 +88,9 @@ class DecoritActivity : AppCompatActivity() {
                                 navController.popBackStack()
                             }
                         )
+                    }
+                    composable("settings") {
+                        SettingsScreen(onGoBack = { navController.popBackStack() })
                     }
                 }
             }
@@ -96,7 +104,7 @@ class DecoritActivity : AppCompatActivity() {
             contentColor = MaterialTheme.colors.onSurface
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+            val currentRoute = navBackStackEntry?.destination?.route
             routes.forEach { screen ->
                 BottomNavigationItem(
                     selectedContentColor = MaterialTheme.colors.primary,
@@ -109,10 +117,13 @@ class DecoritActivity : AppCompatActivity() {
                             // Pop up to the start destination of the graph to
                             // avoid building up a large stack of destinations
                             // on the back stack as users select items
-                            popUpTo = navController.graph.startDestination
+                            popUpTo(navController.graph.startDestinationRoute!!) {
+                                saveState = true
+                            }
                             // Avoid multiple copies of the same destination when
                             // reselecting the same item
                             launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )

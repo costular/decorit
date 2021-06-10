@@ -8,6 +8,7 @@
     <string name="something_went_wrong">Sorry! Something wen\'t wrong :(</string>
     <string name="wallpaper_set_as">Set as</string>
     <string name="photo_downloaded_successfully">Photo downloaded successfully!</string>
+    <string name="provided_by">On</string>
 
     <!-- Search -->
     <string name="search_hint">Search photos…</string>
@@ -36,5 +37,11 @@
     <string name="preferences_quality_title">Quality</string>
     <string name="preferences_quality_view">View Quality</string>
     <string name="preferences_quality_download">Download Quality</string>
+
+    <string name="preferences_appearance_title">Appearance</string>
+    <string name="preferences_theme_title">Theme</string>
+    <string name="preferences_theme_light">Light</string>
+    <string name="preferences_theme_dark">Dark</string>
+    <string name="preferences_theme_system">System default</string>
 
 </resources>

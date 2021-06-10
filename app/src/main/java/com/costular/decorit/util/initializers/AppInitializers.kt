@@ -2,13 +2,13 @@ package com.costular.decorit.util.initializers
 
 import android.app.Application
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AppInitializers @Inject constructor(
-    private val initializers: Set<@JvmSuppressWildcards AppInitializer>
+    private val themeInitializer: ThemeInitializer
 ) {
     fun init(application: Application) {
-        initializers.forEach {
-            it.init(application)
-        }
+        themeInitializer.init(application)
     }
 }

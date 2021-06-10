@@ -7,7 +7,7 @@ plugins {
     kotlin("kapt")
     id(GradlePlugins.kotlinParcelize)
     id(GradlePlugins.hilt)
-    id(GradlePlugins.safeArgs)
+    id("com.github.ben-manes.versions") version "0.39.0"
 }
 
 android {
@@ -58,7 +58,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
         compose = true
     }
 
@@ -67,19 +66,14 @@ android {
     }
 
     packagingOptions {
-        // Multiple dependency bring these files in. Exclude them to enable
-        // our test APK to build (has no effect on our AARs)
-        excludes += "/META-INF/AL2.0"
-        excludes += "/META-INF/LGPL2.1"
+        resources.excludes.add("META-INF/licenses/**")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
     }
 }
 
 kapt {
     correctErrorTypes = true
-    /*arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-    }*/
 }
 
 dependencies {
@@ -90,6 +84,7 @@ dependencies {
     implementation(Deps.material)
     implementation(Deps.core)
     implementation(Deps.appCompat)
+    implementation(Deps.lifecycleRuntimeKtx)
     implementation(Deps.viewModel)
     implementation(Deps.coroutines)
     implementation(Deps.kotlin)
@@ -97,8 +92,6 @@ dependencies {
     kapt(Deps.hiltCompiler)
     kapt(Deps.hiltJetpackCompiler)
     implementation(Deps.hiltJetpackViewModel)
-    implementation(Deps.glide)
-    kapt(Deps.glideCompiler)
     implementation(Deps.appInitializer)
     implementation(Deps.preferences)
     implementation(Deps.preferencesDataStore)
@@ -106,15 +99,9 @@ dependencies {
     implementation(Deps.moshi)
     implementation(Deps.moshiRetrofit)
     kapt(Deps.moshiCompiler)
-    implementation(Deps.lifecycleRuntime)
-    implementation(Deps.lifecycleLiveData)
-    implementation(Deps.lifecycleCommon)
     implementation(Deps.hiltWork)
     debugImplementation(Deps.chuckerDebug)
     releaseImplementation(Deps.chuckerRelease)
-    implementation(Deps.flick)
-    implementation(Deps.gestureViews)
-    implementation(Deps.flowBindingAndroid)
     implementation(Deps.composeActivity)
     implementation(Deps.composeFoundation)
     implementation(Deps.composeRuntime)

@@ -22,18 +22,17 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.costular.decorit.R
 import com.costular.decorit.domain.model.Photo
 import com.costular.decorit.presentation.components.PhotoGrid
-import com.costular.decorit.presentation.photos.PhotosEvents
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(onPhotoClick: (photo: Photo) -> Unit) {
-    val viewModel: SearchViewModel = hiltNavGraphViewModel()
+    val viewModel: SearchViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
     val searchBarHeight = remember { mutableStateOf(0) }
@@ -147,6 +146,7 @@ fun SearchTextField(
 ) {
     OutlinedTextField(
         value = value,
+        maxLines = 1,
         onValueChange = onValueChange,
         trailingIcon = {
             AnimatedVisibility(

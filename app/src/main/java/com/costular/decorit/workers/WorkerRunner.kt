@@ -19,8 +19,13 @@ class WorkerRunner @Inject constructor(
     @ApplicationContext private val applicationContext: Context
 ) {
 
-    fun enqueueDownloadWorker(url: String, fileName: String): UUID {
-        return DownloadWorker.enqueueDownload(applicationContext, url, fileName)
+    fun enqueueDownloadWorker(
+        url: String,
+        fileName: String,
+        photoId: String,
+        source: String
+    ): UUID {
+        return DownloadWorker.enqueueDownload(applicationContext, url, fileName, source, photoId)
     }
 
     suspend fun listenWorkerInfo(uuid: UUID): Flow<WorkInfo> {
