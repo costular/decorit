@@ -5,5 +5,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class UnsplashUserLinks(
-    @Json(name = "self") val self: String
+    @Json(name = "html") val self: String
 )
