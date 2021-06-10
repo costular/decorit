@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Decorit</string>
+    <string name="app_name" translatable="false">Decorit</string>
 
     <string name="nav_photos">Photos</string>
     <string name="nav_search">Search</string>
@@ -23,9 +23,9 @@
     <string name="cancel">Cancel</string>
 
     <!-- More -->
-    <string name="more_menu_github">GitHub</string>
+    <string name="more_menu_github" translatable="false">GitHub</string>
     <string name="more_menu_settings">Settings</string>
-    <string name="more_app_about_description">Open Source Android app to explore, download and set as wallpaper copyright-free photos from different sources like Unsplash, Pexels or Pixabay</string>
+    <string name="more_app_about_description">Open Source Android app to explore, download and set as wallpaper copyright-free photos from different sources like Unsplash, Pexels or Pixabay.</string>
 
     <!-- Preferences -->
     <string name="quality_low">Low</string>
