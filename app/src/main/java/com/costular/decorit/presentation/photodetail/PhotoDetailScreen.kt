@@ -201,13 +201,19 @@ private fun PhotographerNameAndSource(
                 tag = "URL",
                 annotation = authorLink
             )
-            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+            withStyle(
+                style = SpanStyle(
+                    textDecoration = TextDecoration.Underline,
+                    color = MaterialTheme.colors.onBackground
+                )
+            ) {
                 append(name)
             }
             pop()
         }
         ClickableText(
             text = authorAnnotated,
+            style = MaterialTheme.typography.body1,
             onClick = { offset ->
                 handleClick(context, authorAnnotated, offset)
             }
@@ -215,18 +221,26 @@ private fun PhotographerNameAndSource(
 
         val providedBy = stringResource(R.string.provided_by)
         val annotatedString = buildAnnotatedString {
-            append("$providedBy ")
+            withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
+                append("$providedBy ")
+            }
             pushStringAnnotation(
                 tag = "URL",
                 annotation = link
             )
-            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+            withStyle(
+                style = SpanStyle(
+                    textDecoration = TextDecoration.Underline,
+                    color = MaterialTheme.colors.onBackground
+                )
+            ) {
                 append(source)
             }
             pop()
         }
         ClickableText(
             text = annotatedString,
+            style = MaterialTheme.typography.body2,
             onClick = { offset ->
                 handleClick(context, annotatedString, offset)
             }

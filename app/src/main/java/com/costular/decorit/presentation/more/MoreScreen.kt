@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,7 +93,10 @@ private fun AboutApp(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.h6)
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = stringResource(id = R.string.more_app_about_description))
+        Text(
+            text = stringResource(id = R.string.more_app_about_description),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
